@@ -2,12 +2,9 @@
 # Advisor: Julian Wolfson
 # Shiny Sample Sizes
 
-# This is a test
-
 ######  ###########
 ### Libraries ###
 #################
-# devtools::install_github("rstudio/shinydashboard")
 # library(shiny)
 # library(shinydashboard)
 shinyApp(
@@ -15,13 +12,23 @@ shinyApp(
     dashboardHeader(title = "Sample Size Calculations"),
     dashboardSidebar(
       sidebarMenu(
+        menuItem("One Proportion", tabName = "oneproportion"),
         menuItem("Two Proportions", tabName = "twoproportions"),
-        menuItem("Two Means", tabName = "twomeans")
-      ),
-      selectInput(inputId = "selection", label = "select", choices = c("Choice 1", "Choice 2", "Choice 3"))
-    ),
+        menuItem("Two Means", tabName = "twomeans"))),
     dashboardBody(
       tabItems(
+        tabItem(tabName = "oneproportion",
+                fluidRow(
+                  box(
+                    numericInput(inputId = "Noneprop", label = "N", min = 0, max = NA, value = ""),
+                    sliderInput(inputId = "pioneprop", label = "Pi", min = 0, max = 1, value = 0.5),
+                    selectizeInput(inputId = "confoneprop", label = "Confidence", choices = c(0.9, 0.95, 0.98, 0.99, 0.995))),
+                  box(
+                    sliderInput(inputId = "moeoneprop", label = "Margin of Error", min = 0, max = 80, value = 0.5)
+                  )
+                )),
+        
+        
         tabItem(tabName = "twoproportions",
                 fluidRow(
                   box(
@@ -61,7 +68,7 @@ shinyApp(
   
   server = function(input, output){
     output$TEST = renderText({
-      ifelse(input$selection == "Choice 1", paste("Choice 1"), ifelse(input$selection == "Choice 2", paste("Choice 2"), paste("Choice 3")))
+      ifelse(input$solvefor == "alpha", paste("alpha"), ifelse(input$solvefor == "Power", paste("Power"), paste("Sample Size")))
     })
     output$n.per.group.props <- renderText({
       alpha = (100 - input$alpha)/100
