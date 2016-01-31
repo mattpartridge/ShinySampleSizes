@@ -35,9 +35,9 @@ shinyApp(
         #############################################
         tabItem(tabName = "twoproportions",
                 fluidRow(
-                  column(12,
+                  box(
                     selectInput(inputId = "SolveFortwoprops", label = "Solve For",
-                                choices = c("Significance", "Power", "N")))),
+                                choices = c("N", "Significance", "Power")))),
                 fluidRow(
                   box(
                     sliderInput(inputId = "alphatwoprops", label = "Significance:",
@@ -97,14 +97,6 @@ shinyApp(
       #############################################
       ############## Two Proportions ##############
       #############################################
-      if(input$SolveFortwoprops == "Significance"){
-        SFalpha = round(2*(1 - pnorm( sqrt(input$n.per.group.twopropa*((input$p1 - input$p2)^2)/(input$p1*(1-input$p1) + input$p2*(1-input$p2))) - qnorm(input$betatwoprops/100) )), digits = 3)
-        SFSignificance = 100*(1 - SFalpha)
-        updateSliderInput(session, inputId = "alphatwoprops", value = SFSignificance)}
-      if(input$SolveFortwoprops == "Power"){
-        SFbeta = round((pnorm( sqrt(input$n.per.group.twopropa*((input$p1 - input$p2)^2)/(input$p1*(1-input$p1) + input$p2*(1-input$p2))) - qnorm(1 - ((100 - input$alphatwoprops)/100)/2) )), digits = 3)
-        SFPower = 100*(SFbeta)
-        updateSliderInput(session, inputId = "betatwoprops", value = SFPower)}
       if(input$SolveFortwoprops == "N"){
         alpha = (100 - input$alphatwoprops)/100
         beta = input$betatwoprops/100
@@ -116,6 +108,14 @@ shinyApp(
         N = 2*n
         updateNumericInput(session, inputId = "n.per.group.twoprops", value = n)
         updateNumericInput(session, inputId = "TotalN.twoprops", value = N)}
+      if(input$SolveFortwoprops == "Significance"){
+        SFalpha = round(2*(1 - pnorm( sqrt(input$n.per.group.twoprops*((input$p1 - input$p2)^2)/(input$p1*(1-input$p1) + input$p2*(1-input$p2))) - qnorm(input$betatwoprops/100) )), digits = 3)
+        SFSignificance = 100*(1 - SFalpha)
+        updateSliderInput(session, inputId = "alphatwoprops", value = SFSignificance)}
+      if(input$SolveFortwoprops == "Power"){
+        SFbeta = round((pnorm( sqrt(input$n.per.group.twoprops*((input$p1 - input$p2)^2)/(input$p1*(1-input$p1) + input$p2*(1-input$p2))) - qnorm(1 - ((100 - input$alphatwoprops)/100)/2) )), digits = 3)
+        SFPower = 100*(SFbeta)
+        updateSliderInput(session, inputId = "betatwoprops", value = SFPower)}
       
       #######################################
       ############## Two Means ##############
