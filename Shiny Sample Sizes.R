@@ -14,8 +14,7 @@ shinyApp(
       sidebarMenu(
         menuItem("One Sample Proportion", tabName = "oneproportion"),
         menuItem("Two Sample Proportions", tabName = "twoproportions"),
-        menuItem("Two Means", tabName = "twomeans"),
-        menuItem("TEST", tabName = "TEST"))),
+        menuItem("Two Means", tabName = "twomeans"))),
     dashboardBody(
       tabItems(
         
@@ -28,8 +27,8 @@ shinyApp(
                     numericInput(inputId = "Noneprop", label = "N", min = 0, max = NA, value = 100),
                     sliderInput(inputId = "pioneprop", label = "Pi", min = 0, max = 1, value = 0.5),
                     numericInput(inputId = "confoneprop", label = "Confidence", min = 0, max = 1, value = 0.95, step = 0.05),
-                    numericInput(inputId = "MOEonepropa", label = "Margin of Error", value = 0.098),
-                    sliderInput(inputId = "CIonepropa", label = "Confidence Interval", min = 0, max = 1, value = c(0.402, 0.598))))),
+                    numericInput(inputId = "MOEoneprop", label = "Margin of Error", value = 0.098),
+                    sliderInput(inputId = "CIoneprop", label = "Confidence Interval", min = 0, max = 1, value = c(0.402, 0.598))))),
         
         #############################################
         ############## Two Proportions ##############
@@ -52,8 +51,8 @@ shinyApp(
                                 min = 0, max = 1, value = 0.4))),
                 fluidRow(
                   box(
-                    numericInput(inputId = "n.per.group.twopropa", label = "Number of People per Group", value = 385),
-                    numericInput(inputId = "TotalN.twopropa", label = "Total Number of People", value = 770)))),
+                    numericInput(inputId = "n.per.group.twoprops", label = "Number of People per Group", value = 385),
+                    numericInput(inputId = "TotalN.twoprops", label = "Total Number of People", value = 770)))),
         
         #######################################
         ############## Two Means ##############
@@ -71,62 +70,14 @@ shinyApp(
                     numericInput(inputId = "mu2", label = "Mu_2", value = ""))),
                 fluidRow(
                   box(
-                    textOutput("n.per.group.means"),
-                    textOutput("TotalN.means")))),
-        
-        ##################################
-        ############## Test ##############
-        ##################################
-        tabItem(tabName = "TEST",
-                fluidRow(
-                  box(
-                    selectInput(inputId = "SolveFor", label = "Solver For: ", choices = c("Control", "Response")),
-                    sliderInput(inputId = "Control", label = "Control: ",
-                                min = 0, max = 100, value = 25),
-                    sliderInput(inputId = "Response", label = "Response: ",
-                                min = 0, max = 100, value = 50),
-                    numericInput(inputId = "controlresponse", label = "Addition", value = 75))))
-        
+                    numericInput(inputId = "n.per.group.twomeans", label = "Number of People per Group", value = ""),
+                    numericInput(inputId = "TotalN.twomeans", label = "Total Number of People", value = ""))))
         ) # tabItems
       ) # dashboardBody
     ), # dashboardPage
   
   server = function(input, output, clientData, session){
-    
-    #######################################
-    ############## Two Means ##############
-    #######################################
-    output$n.per.group.means <- renderText({
-      alpha = (100 - input$alpha)/100
-      beta = input$beta/100
-      mu1 = input$mu1
-      mu2 = input$mu2
-      sd = input$sd
-      Z.alpha.2 = qnorm(1 - alpha/2)
-      Z.beta = qnorm(beta)
-      n = ceiling(((Z.alpha.2 + Z.beta)^2 * 2*(sd^2))/((mu1 - mu2)^2))
-      paste("The number of people needed per group is: ", n)})
-    output$TotalN.means <- renderText({
-      alpha = (100 - input$alpha)/100
-      beta = input$beta/100
-      mu1 = input$mu1
-      mu2 = input$mu2
-      sd = input$sd
-      Z.alpha.2 = qnorm(1 - alpha/2)
-      Z.beta = qnorm(beta)
-      N = 2*ceiling(((Z.alpha.2 + Z.beta)^2 * 2*(sd^2))/((mu1 - mu2)^2))
-      paste("The total number of people needed is: ", N)})
-    
-    ##################################
-    ############## Test ##############
-    ##################################
-    
-    output$controlresponse = renderText({
-      paste(input$Control + input$Response)
-    })
-    
     observe({
-      
       ############################################
       ############## One Proportion ##############
       ############################################
@@ -140,8 +91,8 @@ shinyApp(
       moe = round(Z_alpha2*se, digits = 3)
       lo = round(pi - moe, digits = 3)
       hi = round(pi + moe, digits = 3)
-      updateNumericInput(session, inputId = "MOEonepropa", value = moe)
-      updateSliderInput(session, inputId = "CIonepropa", value = c(lo, hi))
+      updateNumericInput(session, inputId = "MOEoneprop", value = moe)
+      updateSliderInput(session, inputId = "CIoneprop", value = c(lo, hi))
     
       #############################################
       ############## Two Proportions ##############
@@ -163,19 +114,24 @@ shinyApp(
         Z.beta = qnorm(beta)
         n = ceiling(((Z.alpha.2 + Z.beta)^2 * (p1*(1 - p1) + (p2*(1 - p2)))) / ((p1 - p2)^2))
         N = 2*n
-        updateNumericInput(session, inputId = "n.per.group.twopropa", value = n)
-        updateNumericInput(session, inputId = "TotalN.twopropa", value = N)}
+        updateNumericInput(session, inputId = "n.per.group.twoprops", value = n)
+        updateNumericInput(session, inputId = "TotalN.twoprops", value = N)}
       
-      ##################################
-      ############## Test ##############
-      ##################################
-      if(input$SolveFor == "Control"){
-        SFResponse = 0.5*input$Response
-        updateSliderInput(session, inputId = "Control", value = SFResponse)}
-      else{ updateSliderInput(session, inputId = "Response", value = 2*(input$Control)) }
-      updateNumericInput(session, inputId = "controlresponse", value = (input$Control + input$Response))
-      })
-    
+      #######################################
+      ############## Two Means ##############
+      #######################################
+      alpha = (100 - input$alphatwomeans)/100
+      beta = input$betatwomeans/100
+      mu1 = input$mu1
+      mu2 = input$mu2
+      sd = input$sd
+      Z.alpha.2 = qnorm(1 - alpha/2)
+      Z.beta = qnorm(beta)
+      n = ceiling(((Z.alpha.2 + Z.beta)^2 * 2*(sd^2))/((mu1 - mu2)^2))
+      N = 2*n
+      updateNumericInput(session, inputId = "n.per.group.twomeans", value = n)
+      updateNumericInput(session, inputId = "TotalN.twomeans", value = N)
+    }) # Observe
   } # Server Function
 ) # Shiny App
 
