@@ -2,12 +2,14 @@
 # Advisor: Julian Wolfson
 # Shiny Sample Sizes
 
-# Total number of groups for two props when not on "N"
+###############################################
+############## Things To Look At ##############
+###############################################
 # Slider for N or add by increments
-# Adjusting ranges for slider as you drag
+# Adjusting ranges for slider as you drag --> Kind of implemented (Could look better)
+# Max n for slider would be n that gives 99% power --> Still need to implement
 # Unequal groups
-# reactive UI renderUI****
-# --> Still need to connect power and n
+
 
 library(shiny); library(shinydashboard)
 ui = dashboardPage(
@@ -17,7 +19,7 @@ ui = dashboardPage(
       menuItem("One Sample Proportion", tabName = "oneproportion"),
       menuItem("Two Sample Proportions", tabName = "twoproportions"),
       menuItem("Two Means", tabName = "twomeans"),
-      menuItem("TEST", tabName = "TEST"))),
+      menuItem("reactiveValues() Test", tabName = "Test"))),
   dashboardBody(
     tabItems(
       
@@ -39,24 +41,20 @@ ui = dashboardPage(
       tabItem(tabName = "twoproportions",
               fluidRow(
                 box(
-                  selectInput(inputId = "SolveFortwoprops", label = "Solve For",
-                              choices = c("N", "Power")),
                   numericInput(inputId = "alphatwoprops", label = "Alpha Level:",
-                               min = 0, max = 1, value = 0.05),
+                               min = 0, max = 1, value = 0.05, step = 0.01),
                   sliderInput(inputId = "betatwoprops", label = "Power:",
                               min = 0, max = 100, value = 80.0),
                   uiOutput(outputId = "PowerTwoProps")),
                 box(
-                  wellPanel(
-                    sliderInput(inputId = "p1", label = "Proportion Affected by Treatment 1:",
-                                min = 0, max = 1, value = 0.5),
-                    sliderInput(inputId = "p2", label = "Proportion Affected by Treatment 2:",
-                                min = 0, max = 1, value = 0.4)),
-                  uiOutput(outputId = "NTwoProps"))),
+                  sliderInput(inputId = "p1", label = "Proportion Affected by Treatment 1:",
+                              min = 0, max = 1, value = 0.5),
+                  sliderInput(inputId = "p2", label = "Proportion Affected by Treatment 2:",
+                              min = 0, max = 1, value = 0.4))),
               fluidRow(
                 box(
                   sliderInput(inputId = "n.per.group.twoprops", label = "Number of People per Group", min = 0, max = 10000, value = 385),
-                  sliderInput(inputId = "TotalN.twoprops", label = "Total Number of People", min = 0, max = 10000, value = 770)))),
+                  sliderInput(inputId = "TotalN.twoprops", label = "Total Number of People", min = 0, max = 10000, value = 770, step = 2)))),
       
       #######################################
       ############## Two Means ##############
@@ -79,11 +77,12 @@ ui = dashboardPage(
       ##################################
       ############## Test ##############
       ##################################
-      tabItem(tabName = "TEST",
+      tabItem(tabName = "Test",
               fluidRow(
                 box(
-                  sliderInput(inputId = "Test1", label = "Test1", min = 0, max = 50, value = 25),
-                  uiOutput("TEST2"))))
+                  sliderInput(inputId = "Test1", label = "Test1", min = 0, max = 50, value = 50),
+                  sliderInput(inputId = "Test2", label = "Test2", min = 0, max = 50, value = 25),
+                  textOutput("LASTUPDATED"))))
     ) # tabItems
   ) # dashboardBody
 ) # dashboardPage
