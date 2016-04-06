@@ -31,8 +31,8 @@ shinyApp(
                 fluidRow(
                   box(
                     numericInput(inputId = "Noneprop", label = "N", min = 0, max = NA, value = 100),
-                    sliderInput(inputId = "pioneprop", label = "Pi", min = 0, max = 1, value = 0.5),
-                    numericInput(inputId = "confoneprop", label = "Confidence", min = 0, max = 1, value = 0.95, step = 0.05),
+                    sliderInput(inputId = "pioneprop", label = "True Proportion", min = 0, max = 1, value = 0.5),
+                    numericInput(inputId = "confoneprop", label = "Confidence", min = 0, max = 1, value = 0.95, step = 0.01),
                     numericInput(inputId = "MOEoneprop", label = "Margin of Error", value = 0.098),
                     sliderInput(inputId = "CIoneprop", label = "Confidence Interval", min = 0, max = 1, value = c(0.402, 0.598))))),
         
