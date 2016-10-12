@@ -61,7 +61,7 @@ shinyApp(
                                                         )
                                        ),
                                        numericInput(inputId = "studyduration_N_TTE",
-                                                    label = "Study Duration",
+                                                    label = "Study Duration (units of time)",
                                                     value = 5,
                                                     min = 0,
                                                     max = 10,
@@ -183,7 +183,7 @@ shinyApp(
           if(input$solvefor_TTE == "Sample Size"){
             list(
               numericInput(inputId = "ctrlcensorrate_N_TTE",
-                           label = "Control Group's Censor Rate",
+                           label = "Control Group's Censoring Rate",
                            value = 0,
                            min = 0,
                            max = 1,
@@ -195,7 +195,7 @@ shinyApp(
                           max = 1,
                           step = 0.01),
               numericInput(inputId = "expcensorrate_N_TTE",
-                           label = "Experimental Group's Censor Rate",
+                           label = "Experimental Group's Censoring Rate",
                            value = 0,
                            min = 0,
                            max = 1,
@@ -299,23 +299,25 @@ shinyApp(
           updateNumericInput(session, "expcensorrate_N_TTE", value = input$expcensorrate_S_TTE)
         }
         # Sample Size Calculations
-        ctrllambda = input$ctrllambda_N_TTE
-        ctrlcensorrate = input$ctrlcensorrate_N_TTE
+        ctrllambda = ifelse( is.null(input$ctrllambda_N_TTE), 1, input$ctrllambda_N_TTE)
+        ctrlcensorrate = ifelse( is.null(input$ctrlcensorrate_N_TTE), 0, input$ctrlcensorrate_N_TTE)
         lambda1 = ctrllambda*(ctrllambda/(ctrllambda + ctrlcensorrate))
-        explambda = input$explambda_N_TTE
-        expcensorrate = input$expcensorrate_N_TTE
+        explambda = ifelse( is.null(input$explambda_N_TTE), 1.5, input$explambda_N_TTE)
+        expcensorrate = ifelse( is.null(input$expcensorrate_N_TTE), 0, input$expcensorrate_N_TTE)
         lambda2 = explambda*(explambda/(explambda + expcensorrate))
-        Tstudy = input$studyduration_N_TTE
+        Tstudy = ifelse( is.null(input$studyduration_N_TTE), 5, input$studyduration_N_TTE)
         Tenrollment = ifelse(is.null(input$enrollmentduration_N_TTE), 0, input$enrollmentduration_N_TTE)
         eta = 0
         ratio = 1
         alpha = input$alpha_N_TTE
         beta =  1 - input$power_N_TTE
         sided = 2
-        approx = F
+        approx = FALSE
         type = "rr" # Im not sure
         entry = ifelse(is.null(input$enrollmentdist_SE_TTE), "unif", ifelse(input$enrollmentdist_SE_TTE == "Uniform", "unif", "expo"))
-        gamma = ifelse(is.null(input$gamma_N_TTE), 16, input$gamma_N_TTE) # This could be a problem
+        gamma = ifelse( entry == "unif", NA, 1)
+        #gamma = ifelse( is.null(input$gamma_N_TTE), 16, input$gamma_N_TTE) # This could be a problem
+        #print(c(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma))
         N = ceiling(nSurvival(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma)$n)
         n = N/2
         # Output
