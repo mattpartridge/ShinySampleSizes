@@ -315,8 +315,8 @@ shinyApp(
         approx = FALSE
         type = "rr" # Im not sure
         entry = ifelse(is.null(input$enrollmentdist_SE_TTE), "unif", ifelse(input$enrollmentdist_SE_TTE == "Uniform", "unif", "expo"))
-        gamma = ifelse( entry == "unif", NA, 1)
-        #gamma = ifelse( is.null(input$gamma_N_TTE), 16, input$gamma_N_TTE) # This could be a problem
+        #gamma = ifelse( entry == "unif", NA, 1)
+        gamma = ifelse( is.null(input$gamma_N_TTE), 16, input$gamma_N_TTE) # This could be a problem
         #print(c(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma))
         N = ceiling(nSurvival(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma)$n)
         n = N/2
