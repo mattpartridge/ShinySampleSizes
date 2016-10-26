@@ -31,7 +31,11 @@ shinyApp(
         tabItem(tabName = "TP",
                 fluidRow(
                   box(width = 12,
-                      selectInput(inputId = "solvefor_TP", label = "Solve For", choices = c("Sample Size", "Power"), selected = "Sample Size", width = "100%")),
+                      selectInput(inputId = "solvefor_TP",
+                                  label = "Solve For",
+                                  choices = c("Sample Size", "Power"),
+                                  selected = "Sample Size",
+                                  width = "100%")),
                   uiOutput("TP")))))
   ), # dashboardPage
   
@@ -143,9 +147,9 @@ shinyApp(
           updateNumericInput(session, "alpha_N_TP", value = input$alpha_S_TP)
         }
         # Power Calculations
-        p1 = ifelse(is.null(input$p1_N_TP), 1, input$p1_N_TP)
+        p1 = ifelse(is.null(input$p1_N_TP), 0.5, input$p1_N_TP)
         n1 = ifelse(is.null(input$N1_N_TP), 100, input$N1_N_TP)
-        p2 = ifelse(is.null(input$p2_N_TP), 1.3, input$p2_N_TP)
+        p2 = ifelse(is.null(input$p2_N_TP), 0.7, input$p2_N_TP)
         n2 = ifelse(is.null(input$N2_N_TP), 695, input$N2_N_TP)
         h = ES.h(p1, p2)
         sig.level = ifelse(is.null(input$alpha_N_TP), 0.05, input$alpha_N_TP)

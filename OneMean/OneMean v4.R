@@ -32,7 +32,11 @@ shinyApp(
         tabItem(tabName = "OM",
                 fluidRow(
                   box(width = 12,
-                      selectInput(inputId = "solvefor_OM", label = "Solve For", choices = c("Sample Size", "Power", "Precision"), selected = "Sample Size", width = "100%")),
+                      selectInput(inputId = "solvefor_OM",
+                                  label = "Solve For",
+                                  choices = c("Sample Size", "Power", "Precision"),
+                                  selected = "Sample Size",
+                                  width = "100%")),
                   uiOutput("OM")))))
   ), # dashboardPage
   
@@ -114,13 +118,14 @@ shinyApp(
         }
         # Sample Size Calculations
         n = NULL
-        d = input$mu_N_OM - input$nullmu_N_OM
-        sig.level = input$alpha_N_OM
-        power = input$power_N_OM
+        mu = ifelse(is.null(input$mu_N_OM), 0.77, input$mu_N_OM)
+        nullmu = ifelse(is.null(input$nullmu_N_OM), 1.0, input$nullmu_N_OM)
+        d = mu - nullmu
+        sig.level = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
+        power = ifelse(is.null(input$power_N_OM), 0.8, input$power_N_OM)
         type = "one.sample"
         alternative = "two.sided"
-        if(is.null(power)){ n = 100 }
-        else{ n = round(pwr.t.test(n, d, sig.level, power, type, alternative)$n, digits = 0) }
+        n = round(pwr.t.test(n, d, sig.level, power, type, alternative)$n, digits = 0)
         # Output
         updateNumericInput(session, inputId = "N_N_OM", value = n)
         updateSliderInput(session, inputId = "N_S_OM", value = n)
@@ -146,9 +151,11 @@ shinyApp(
           updateSliderInput(session, "N_N_OM", value = input$N_S_OM)
         }
         # Power Calculations
-        n = input$N_N_OM
-        d = input$mu_N_OM - input$nullmu_N_OM
-        sig.level = input$alpha_N_OM
+        n = ifelse(is.null(input$N_N_OM), 150, input$N_N_OM)
+        mu = ifelse(is.null(input$mu_N_OM), 0.77, input$mu_N_OM)
+        nullmu = ifelse(is.null(input$nullmu_N_OM), 1.0, input$nullmu_N_OM)
+        d = mu - nullmu
+        sig.level = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
         power = NULL
         type = "one.sample"
         alternative = "two.sided"
@@ -178,10 +185,10 @@ shinyApp(
           updateNumericInput(session, "alpha_N_OM", value = input$alpha_S_OM)
         }
         # Precision Calculations
-        mu = input$mu_N_OM
-        sd = input$sd_N_OM
-        n = input$N_N_OM
-        alpha = input$alpha_N_OM
+        mu = ifelse(is.null(input$mu_N_OM), 0.77, input$mu_N_OM)
+        sd = ifelse(is.null(input$sd_N_OM), 1.0, input$sd_N_OM)
+        n = ifelse(is.null(input$N_N_OM), 150, input$N_N_OM)
+        alpha = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
         Z.alpha.2 = qnorm(1 - alpha/2)
         se = sd/sqrt(n)
         moe = round(Z.alpha.2*se, digits = 2)

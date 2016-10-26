@@ -30,7 +30,11 @@ shinyApp(
         tabItem(tabName = "OP",
                 fluidRow(
                   box(width = 12,
-                      selectInput(inputId = "solvefor_OP", label = "Solve For", choices = c("Sample Size", "Power", "Precision"), selected = "Sample Size", width = "100%")),
+                      selectInput(inputId = "solvefor_OP",
+                                  label = "Solve For",
+                                  choices = c("Sample Size", "Power", "Precision"),
+                                  selected = "Sample Size",
+                                  width = "100%")),
                   uiOutput("OP")))))
   ), # dashboardPage
   
