@@ -13,7 +13,6 @@ library(shiny); library(shinydashboard); library(gsDesign)
 
 ### Needs
 # Need to find reputable references about the calculations. This whole tab needs to validate the equations.
-
 # Bounds on sliders (and numerics) still needs to be able to change fluidly.
 
 
