@@ -294,7 +294,7 @@ server = function(input, output, clientData, session){
       if(NorS_OP$NorS == "N"){
         # Update Slider Inputs
         updateSliderInput(session, "p_S_OP", value = input$p_N_OP)
-        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(inpu$N_N_OM < 10, 10, round(input$N_N_OM + sqrt(input$N_N_OM), digits = 0)))
+        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + sqrt(input$N_N_OM), digits = 0)))
         updateSliderInput(session, "alpha_S_OP", value = input$alpha_N_OP)
       }
       ### Slider
@@ -373,9 +373,9 @@ server = function(input, output, clientData, session){
       #### numericInput was updated
       if(NorS_TM$NorS == "N"){
         ### Update sliderInputs
-        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, max = ifelse(mu1_N_TM < 10, 10, round(input$mu1_N_TM + sqrt(input$mu1_N_TM), digits = 0)))
-        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(N1_N_TM < 10, 10, round(input$N1_N_TM + sqrt(input$N1_N_TM), digits = 0)))
-        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, max = ifelse(mu2_N_TM < 10, 10, round(input$mu2_N_TM + sqrt(input$mu2_N_TM), digits = 0)))
+        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, max = ifelse(input$mu1_N_TM < 10, 10, round(input$mu1_N_TM + sqrt(input$mu1_N_TM), digits = 0)))
+        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(input$N1_N_TM < 10, 10, round(input$N1_N_TM + sqrt(input$N1_N_TM), digits = 0)))
+        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, max = ifelse(input$mu2_N_TM < 10, 10, round(input$mu2_N_TM + sqrt(input$mu2_N_TM), digits = 0)))
         updateSliderInput(session, "alpha_S_TM", value = input$alpha_N_TM)
         updateSliderInput(session, "power_S_TM", value = input$power_N_TM)
       }
@@ -410,10 +410,10 @@ server = function(input, output, clientData, session){
       ### Numeric
       if(NorS_TM$NorS == "N"){
         # Update Slider Inputs
-        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, max = ifelse(mu1_N_TM < 10, 10, round(input$mu1_N_TM + sqrt(input$mu1_N_TM), digits = 0)))
-        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(N1_N_TM < 10, 10, round(input$N1_N_TM + sqrt(input$N1_N_TM), digits = 0)))
-        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, max = ifelse(mu2_N_TM < 10, 10, round(input$mu2_N_TM + sqrt(input$mu2_N_TM), digits = 0)))
-        updateSliderInput(session, "N2_S_TM", value = input$N2_N_TM, max = ifelse(N2_N_TM < 10, 10, round(input$N2_N_TM + sqrt(input$N2_N_TM), digits = 0)))
+        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, max = ifelse(input$mu1_N_TM < 10, 10, round(input$mu1_N_TM + sqrt(input$mu1_N_TM), digits = 0)))
+        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(input$N1_N_TM < 10, 10, round(input$N1_N_TM + sqrt(input$N1_N_TM), digits = 0)))
+        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, max = ifelse(input$mu2_N_TM < 10, 10, round(input$mu2_N_TM + sqrt(input$mu2_N_TM), digits = 0)))
+        updateSliderInput(session, "N2_S_TM", value = input$N2_N_TM, max = ifelse(input$N2_N_TM < 10, 10, round(input$N2_N_TM + sqrt(input$N2_N_TM), digits = 0)))
         updateSliderInput(session, "alpha_S_TM", value = input$alpha_N_TM)
       }
       ### Slider
