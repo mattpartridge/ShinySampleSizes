@@ -15,34 +15,28 @@ server = function(input, output, clientData, session){
     list(
       # Inputs
       box(
-        numericInput(inputId = "mu_N_OM", label = "Mean", value = 0.77, min = 0, max = NA, step = 0.01, width = NULL),
-        sliderInput(inputId = "mu_S_OM", label = "", min = 0, max = 2, value = 0.77, step = 0.01, round = FALSE, width = NULL),
+        numericInput(inputId = "mu_N_OM", label = "Mean", value = 0, min = NA, max = NA, step = 0.01, width = NULL),
+        sliderInput(inputId = "mu_S_OM", label = "", min = -10, max = 10, value = 0, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_OM %in% c("Sample Size", "Power")){
           list(
-            numericInput(inputId = "nullmu_N_OM", label = "Hypothesis Mean", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
-            sliderInput(inputId = "nullmu_S_OM", label = "", min = 0, max = 2, value = 1, step = 0.01, round = FALSE, width = NULL))},
-        if(input$solvefor_OM == "Precision"){
-          list(
-            numericInput(inputId = "sd_N_OM", label = "SD", value = 1, min = 0, max = NA, step = 0.1, width = NULL),
-            sliderInput(inputId = "sd_S_OM", label = "", min = 0, max = 5, value = 1, step = 0.1, round = FALSE, width = NULL))},
-        if(input$solvefor_OM %in% c("Power", "Precision")){
-          list(
-            numericInput(inputId = "N_N_OM", label = "Sample Size", value = 150, min = 0, max = NA, step = 1, width = NULL),
-            sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 1000, value = 150, step = 1, round = FALSE, width = NULL))},
+            numericInput(inputId = "nullmu_N_OM", label = "Hypothesis Mean", value = 1.0, min = 0, max = NA, step = 0.01, width = NULL),
+            sliderInput(inputId = "nullmu_S_OM", label = "", min = -10, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL))},
+        numericInput(inputId = "sd_N_OM", label = "SD", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+        sliderInput(inputId = "sd_S_OM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL)),
+      # Outputs
+      box(
         numericInput(inputId = "alpha_N_OM", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_OM", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_OM == "Sample Size"){
           list(
             numericInput(inputId = "power_N_OM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
-            sliderInput(inputId = "power_S_OM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}),
-      # Outputs
-      box(
-        if(input$solvefor_OM == "Sample Size"){
-          list(
+            sliderInput(inputId = "power_S_OM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
             numericInput(inputId = "N_N_OM", label = "Sample Size", value = 150, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 1000, value = 150, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_OM == "Power"){
           list(
+            numericInput(inputId = "N_N_OM", label = "Sample Size", value = 150, min = 0, max = NA, step = 1, width = NULL),
+            sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 1000, value = 150, step = 1, round = FALSE, width = NULL),
             numericInput(inputId = "power_N_OM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_OM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))},
         if(input$solvefor_OM == "Precision"){
@@ -62,7 +56,7 @@ server = function(input, output, clientData, session){
     input$mu_S_OM; input$nullmu_S_OM; input$alpha_S_OM; input$power_S_OM; input$N_S_OM; input$sd_S_OM; input$moe_S_OM
     NorS_OM$NorS = "S"
   })
-  
+
   ### Calculations
   observe({
     ##### Sample Size
@@ -70,8 +64,9 @@ server = function(input, output, clientData, session){
       #### numericInput was updated
       if(NorS_OM$NorS == "N"){
         ### Update sliderInputs
-        updateSliderInput(session, "mu_S_OM", value = input$mu_N_OM, max = ifelse(input$mu_N_OM < 10, 10, round(input$mu_N_OM + sqrt(input$mu_N_OM), digits = 0)))
-        updateSliderInput(session, "nullmu_S_OM", value = input$nullmu_N_OM, max = ifelse(input$nullmu_N_OM < 10, 10, round(input$nullmu_N_OM + sqrt(input$nullmu_N_OM), digits = 0)))
+        updateSliderInput(session, "mu_S_OM", value = input$mu_N_OM, min = round(input$mu_N_OM - max(1, 6*sqrt(abs(input$mu_N_OM))), digits = 0), max = round(input$mu_N_OM + max(1, 6*sqrt(abs(input$mu_N_OM))), digits = 0))
+        updateSliderInput(session, "nullmu_S_OM", value = input$nullmu_N_OM, min = round(input$nullmu_N_OM - max(1, 6*sqrt(abs(input$nullmu_N_OM))), digits = 0), max = round(input$nullmu_N_OM + max(1, 6*sqrt(abs(input$nullmu_N_OM))), digits = 0))
+        updateSliderInput(session, "sd_S_OM", value = input$sd_N_TTE, max = ifelse(input$sd_N_OM < 1, 1, round(input$sd_N_OM + 6*sqrt(input$sd_N_OM), digits = 0)))
         updateSliderInput(session, "alpha_S_OM", value = input$alpha_N_OM)
         updateSliderInput(session, "power_S_OM", value = input$power_N_OM)
       }
@@ -80,22 +75,25 @@ server = function(input, output, clientData, session){
         ### Update numericInputs
         updateNumericInput(session, "mu_N_OM", value = input$mu_S_OM)
         updateNumericInput(session, "nullmu_N_OM", value = input$nullmu_S_OM)
+        updateNumericInput(session, "sd_N_OM", value = input$sd_S_OM)
         updateNumericInput(session, "alpha_N_OM", value = input$alpha_S_OM)
         updateNumericInput(session, "power_N_OM", value = input$power_S_OM)
       }
       # Sample Size Calculations
       n = NULL
-      mu = ifelse(is.null(input$mu_N_OM), 0.77, input$mu_N_OM)
+      mu = ifelse(is.null(input$mu_N_OM), 0, input$mu_N_OM)
       nullmu = ifelse(is.null(input$nullmu_N_OM), 1, input$nullmu_N_OM)
-      d = mu - nullmu
+      sd = ifelse(is.null(input$sd_N_OM), 1.0, input$sd_N_OM)
+      d = (mu - nullmu)/sd
       sig.level = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
       power = ifelse(is.null(input$power_N_OM), 0.8, input$power_N_OM)
       type = "one.sample"
       alternative = "two.sided"
-      n = round(pwr.t.test(n = n, d = d, sig.level = sig.level, power = power, type = type, alternative = alternative)$n, digits = 0)
+      n = try(round(pwr.t.test(n = n, d = d, sig.level = sig.level, power = power, type = type, alternative = alternative)$n, digits = 0), silent = TRUE)
+      n = ifelse(class(n) == "try-error", NaN, n)
       # Output
       updateNumericInput(session, inputId = "N_N_OM", value = n)
-      updateSliderInput(session, inputId = "N_S_OM", value = n, max = round(n + sqrt(n), digits = 0))
+      updateSliderInput(session, inputId = "N_S_OM", value = n, max = ifelse(n < 10, 10, round(n + 6*sqrt(n), digits = 0)))
     }
     
     ##### Power
@@ -104,29 +102,33 @@ server = function(input, output, clientData, session){
       ### Numeric
       if(NorS_OM$NorS == "N"){
         # Update Slider Inputs
-        updateSliderInput(session, "mu_S_OM", value = input$mu_N_OM, max = ifelse(input$mu_N_OM < 10, 10, round(input$mu_N_OM + sqrt(input$mu_N_OM), digits = 0)))
-        updateSliderInput(session, "nullmu_S_OM", value = input$nullmu_N_OM, max = ifelse(input$nullmu_N_OM < 10, 10, round(input$nullmu_N_OM + sqrt(input$nullmu_N_OM), digits = 0)))
+        updateSliderInput(session, "mu_S_OM", value = input$mu_N_OM, min = round(input$mu_N_OM - max(1, 6*sqrt(abs(input$mu_N_OM))), digits = 0), max = round(input$mu_N_OM + max(1, 6*sqrt(input$mu_N_OM)), digits = 0))
+        updateSliderInput(session, "nullmu_S_OM", value = input$nullmu_N_OM, min = round(input$nullmu_N_OM - max(1, 6*sqrt(abs(input$nullmu_N_OM))), digits = 0), max = round(input$nullmu_N_OM + max(1, 6*sqrt(input$nullmu_N_OM)), digits = 0))
+        updateSliderInput(session, "sd_S_OM", value = input$sd_N_TTE, max = ifelse(input$sd_N_OM < 1, 1, round(input$sd_N_OM + 6*sqrt(input$sd_N_OM), digits = 0)))
         updateSliderInput(session, "alpha_S_OM", value = input$alpha_N_OM)
-        updateSliderInput(session, "N_S_OM", value = input$N_N_OM, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + sqrt(input$N_N_OM), digits = 0)))
+        updateSliderInput(session, "N_S_OM", value = input$N_N_OM, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + 6*sqrt(input$N_N_OM), digits = 0)))
       }
       ### Slider
       if(NorS_OM$NorS == "S"){
         # Update Numeric Inputs
         updateNumericInput(session, "mu_N_OM", value = input$mu_S_OM)
         updateNumericInput(session, "nullmu_N_OM", value = input$nullmu_S_OM)
+        updateNumericInput(session, "sd_N_OM", value = input$sd_S_OM)
         updateSliderInput(session, "alpha_N_OM", value = input$alpha_S_OM)
         updateSliderInput(session, "N_N_OM", value = input$N_S_OM)
       }
       # Power Calculations
       n = ifelse(is.null(input$N_N_OM), 150, input$N_N_OM)
-      mu = ifelse(is.null(input$mu_N_OM), 0.77, input$mu_N_OM)
-      nullmu = ifelse(is.null(input$nullmu_N_OM), 1, input$nullmu_N_OM)
-      d = mu - nullmu
+      mu = ifelse(is.null(input$mu_N_OM), 0, input$mu_N_OM)
+      nullmu = ifelse(is.null(input$nullmu_N_OM), 1.0, input$nullmu_N_OM)
+      sd = ifelse(is.null(input$sd_N_OM), 1, input$sd_N_OM)
+      d = (mu - nullmu)/sd
       sig.level = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
       power = NULL
       type = "one.sample"
       alternative = "two.sided"
-      power = round(pwr.t.test(n = n, d = d, sig.level = sig.level, power = power, type = type, alternative = alternative)$power, digits = 2)
+      power = try(round(pwr.t.test(n = n, d = d, sig.level = sig.level, power = power, type = type, alternative = alternative)$power, digits = 2), silent = TRUE)
+      power = ifelse(class(power) == "try-error", NaN, power)
       # Output
       updateNumericInput(session, inputId = "power_N_OM", value = power)
       updateSliderInput(session, inputId = "power_S_OM", value = power)
@@ -138,9 +140,9 @@ server = function(input, output, clientData, session){
       ### Numeric
       if(NorS_OM$NorS == "N"){
         # Update Slider Inputs
-        updateSliderInput(session, "mu_S_OM", value = input$mu_N_OM, max = ifelse(input$mu_N_OM < 10, 10, round(input$mu_N_OM + sqrt(input$mu_N_OM), digits = 0)))
-        updateSliderInput(session, "sd_S_OM", value = input$sd_N_OM, max = ifelse(input$sd_N_OM < 10, 10, round(input$sd_N_OM + sqrt(input$sd_N_OM), digits = 0)))
-        updateSliderInput(session, "N_S_OM", value = input$N_N_OM, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + sqrt(input$N_N_OM), digits = 0)))
+        updateSliderInput(session, "mu_S_OM", value = input$mu_N_OM, min = round(input$mu_N_OM - max(1, 6*sqrt(abs(input$mu_N_OM))), digits = 0), max = round(input$mu_N_OM + max(1, 6*sqrt(abs(input$mu_N_OM))), digits = 0))
+        updateSliderInput(session, "sd_S_OM", value = input$sd_N_TTE, max = ifelse(input$sd_N_OM < 5, 5, round(input$sd_N_OM + 6*sqrt(input$sd_N_OM), digits = 0)))
+        updateSliderInput(session, "N_S_OM", value = input$N_N_OM, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + 6*sqrt(input$N_N_OM), digits = 0)))
         updateSliderInput(session, "alpha_S_OM", value = input$alpha_N_OM)
       }
       ### Slider
@@ -152,7 +154,7 @@ server = function(input, output, clientData, session){
         updateNumericInput(session, "alpha_N_OM", value = input$alpha_S_OM)
       }
       # Precision Calculations
-      mu = ifelse(is.null(input$mu_N_OM), 0.77, input$mu_N_OM)
+      mu = ifelse(is.null(input$mu_N_OM), 0, input$mu_N_OM)
       sd = ifelse(is.null(input$sd_N_OM), 1, input$sd_N_OM)
       n = ifelse(is.null(input$N_N_OM), 150, input$N_N_OM)
       alpha = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
@@ -181,25 +183,21 @@ server = function(input, output, clientData, session){
         if(input$solvefor_OP %in% c("Sample Size", "Power")){
           list(
             numericInput(inputId = "nullp_N_OP", label = "Hypothesis Proportion", value = 0.52, min = 0, max = 1, step = 0.01, width = NULL),
-            sliderInput(inputId = "nullp_S_OP", label = "", min = 0, max = 1, value = 0.52, step = 0.01, round = FALSE, width = NULL))},
-        if(input$solvefor_OP %in% c("Power", "Precision")){
-          list(
-            numericInput(inputId = "N_N_OP", label = "Sample Size", value = 4903, min = 0, max = NA, step = 1, width = NULL),
-            sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 5000, value = 4903, step = 1, round = FALSE, width = NULL))},
+            sliderInput(inputId = "nullp_S_OP", label = "", min = 0, max = 1, value = 0.52, step = 0.01, round = FALSE, width = NULL))}),
+      # Output
+      box(
         numericInput(inputId = "alpha_N_OP", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_OP", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_OP == "Sample Size"){
           list(
             numericInput(inputId = "power_N_OP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
-            sliderInput(inputId = "power_S_OP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}),
-      # Output
-      box(
-        if(input$solvefor_OP == "Sample Size"){
-          list(
+            sliderInput(inputId = "power_S_OP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
             numericInput(inputId = "N_N_OP", label = "Sample Size", value = 4903, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 5000, value = 4903, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_OP == "Power"){
           list(
+            numericInput(inputId = "N_N_OP", label = "Sample Size", value = 4903, min = 0, max = NA, step = 1, width = NULL),
+            sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 5000, value = 4903, step = 1, round = FALSE, width = NULL),
             numericInput(inputId = "power_N_OP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_OP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))},
         if(input$solvefor_OP == "Precision"){
@@ -248,10 +246,11 @@ server = function(input, output, clientData, session){
       sig.level = ifelse(is.null(input$alpha_N_OP), 0.05, input$alpha_N_OP)
       power = ifelse(is.null(input$power_N_OP), 0.8, input$power_N_OP)
       alternative = "two.sided"
-      n = round(pwr.p.test(h, n, sig.level, power, alternative)$n, digits = 0)
+      n = try(round(pwr.p.test(h, n, sig.level, power, alternative)$n, digits = 0), silent = TRUE)
+      n = ifelse(class(n) == "try-error", NaN, n)
       # Output
       updateNumericInput(session, inputId = "N_N_OP", value = n)
-      updateSliderInput(session, inputId = "N_S_OP", value = n, max = ifelse(n < 10, 10, round(n + sqrt(n), digits = 0)))
+      updateSliderInput(session, inputId = "N_S_OP", value = n, max = ifelse(n < 10, 10, round(n + 6*sqrt(n), digits = 0)))
     }
     
     ##### Power
@@ -263,7 +262,7 @@ server = function(input, output, clientData, session){
         updateSliderInput(session, "p_S_OP", value = input$p_N_OP)
         updateSliderInput(session, "nullp_S_OP", value = input$nullp_N_OP)
         updateSliderInput(session, "alpha_S_OP", value = input$alpha_N_OP)
-        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + sqrt(input$N_N_OM), digits = 0)))
+        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + 6*sqrt(input$N_N_OM), digits = 0)))
       }
       ### Slider
       if(NorS_OP$NorS == "S"){
@@ -281,7 +280,8 @@ server = function(input, output, clientData, session){
       sig.level = ifelse(is.null(input$alpha_N_OP), 0.05, input$alpha_N_OP)
       power = NULL
       alternative = "two.sided"
-      power = round(pwr.p.test(h, n, sig.level, power, alternative)$power, digits = 2)
+      power = try(round(pwr.p.test(h, n, sig.level, power, alternative)$power, digits = 2), silent = TRUE)
+      power = ifelse(class(power) == "try-error", NaN, power)
       # Output
       updateNumericInput(session, inputId = "power_N_OP", value = power)
       updateSliderInput(session, inputId = "power_S_OP", value = power)
@@ -294,7 +294,7 @@ server = function(input, output, clientData, session){
       if(NorS_OP$NorS == "N"){
         # Update Slider Inputs
         updateSliderInput(session, "p_S_OP", value = input$p_N_OP)
-        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + sqrt(input$N_N_OM), digits = 0)))
+        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(input$N_N_OP < 10, 10, round(input$N_N_OP + 6*sqrt(input$N_N_OP), digits = 0)))
         updateSliderInput(session, "alpha_S_OP", value = input$alpha_N_OP)
       }
       ### Slider
@@ -327,30 +327,28 @@ server = function(input, output, clientData, session){
     list(
       # Inputs
       box(
-        numericInput(inputId = "mu1_N_TM", label = "Mean One", value = 1.0, min = 0, max = NA, step = 0.01, width = NULL),
-        sliderInput(inputId = "mu1_S_TM", label = "", min = 0, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL),
+        numericInput(inputId = "mu1_N_TM", label = "Mean One", value = 0, min = NA, max = NA, step = 0.01, width = NULL),
+        sliderInput(inputId = "mu1_S_TM", label = "", min = -10, max = 10, value = 0, step = 0.01, round = FALSE, width = NULL),
         numericInput(inputId = "N1_N_TM", label = "Sample Size One", value = 100, min = 0, max = NA, step = 1, width = NULL),
         sliderInput(inputId = "N1_S_TM", label = "", min = 0, max = 10000, value = 100, step = 1, round = FALSE, width = NULL),
-        numericInput(inputId = "mu2_N_TM", label = "Mean Two", value = 1.3, min = 0, max = NA, step = 0.01, width = NULL),
-        sliderInput(inputId = "mu2_S_TM", label = "", min = 0, max = 10, value = 1.3, step = 0.01, round = FALSE, width = NULL),
-        if(input$solvefor_TM == "Power"){
-          list(
-            numericInput(inputId = "N2_N_TM", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
-            sliderInput(inputId = "N2_S_TM", label = "", min = 0, max = 10000, value = 695, step = 1, round = FALSE, width = NULL))},
+        numericInput(inputId = "mu2_N_TM", label = "Mean Two", value = 1.0, min = NA, max = NA, step = 0.01, width = NULL),
+        sliderInput(inputId = "mu2_S_TM", label = "", min = -10, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL),
+        numericInput(inputId = "sd_N_TM", label = "Standard Deviation", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+        sliderInput(inputId = "sd_S_TM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL)),
+      # Outputs
+      box(
         numericInput(inputId = "alpha_N_TM", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_TM", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_TM == "Sample Size"){
           list(
             numericInput(inputId = "power_N_TM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
-            sliderInput(inputId = "power_S_TM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}),
-      # Outputs
-      box(
-        if(input$solvefor_TM == "Sample Size"){
-          list(
+            sliderInput(inputId = "power_S_TM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
             numericInput(inputId = "N2_N_TM", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N2_S_TM", label = "", min = 0, max = 10000, value = 695, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_TM == "Power"){
           list(
+            numericInput(inputId = "N2_N_TM", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
+            sliderInput(inputId = "N2_S_TM", label = "", min = 0, max = 10000, value = 695, step = 1, round = FALSE, width = NULL),
             numericInput(inputId = "power_N_TM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_TM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}))
   })
@@ -358,11 +356,11 @@ server = function(input, output, clientData, session){
   ### Numeric or Slider
   NorS_TM = reactiveValues( NorS = "" )
   observe({
-    input$mu1_N_TM; input$N1_N_TM; input$mu2_N_TM; input$N2_N_TM; input$alpha_N_TM; input$power_N_TM
+    input$mu1_N_TM; input$N1_N_TM; input$mu2_N_TM; input$N2_N_TM; input$sd_N_TM; input$alpha_N_TM; input$power_N_TM
     NorS_TM$NorS = "N"
   })
   observe({
-    input$mu1_S_TM; input$N1_S_TM; input$mu2_S_TM; input$N2_S_TM; input$alpha_S_TM; input$power_S_TM
+    input$mu1_S_TM; input$N1_S_TM; input$mu2_S_TM; input$N2_S_TM; input$sd_S_TM; input$alpha_S_TM; input$power_S_TM
     NorS_TM$NorS = "S"
   })
   
@@ -373,9 +371,10 @@ server = function(input, output, clientData, session){
       #### numericInput was updated
       if(NorS_TM$NorS == "N"){
         ### Update sliderInputs
-        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, max = ifelse(input$mu1_N_TM < 10, 10, round(input$mu1_N_TM + sqrt(input$mu1_N_TM), digits = 0)))
-        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(input$N1_N_TM < 10, 10, round(input$N1_N_TM + sqrt(input$N1_N_TM), digits = 0)))
-        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, max = ifelse(input$mu2_N_TM < 10, 10, round(input$mu2_N_TM + sqrt(input$mu2_N_TM), digits = 0)))
+        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, min = round(input$mu1_N_TM - max(1, 6*sqrt(abs(input$mu1_N_TM))), digits = 0), max = round(input$mu1_N_TM + max(1, 6*sqrt(abs(input$mu1_N_TM))), digits = 0))
+        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(input$N1_N_TM < 10, 10, round(input$N1_N_TM + 6*sqrt(input$N1_N_TM), digits = 0)))
+        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, min = round(input$mu2_N_TM - max(1, 6*sqrt(abs(input$mu2_N_TM))), digits = 0), max = round(input$mu2_N_TM + max(1, 6*sqrt(abs(input$mu2_N_TM))), digits = 0))
+        updateSliderInput(session, "sd_S_TM", value = input$sd_N_TM, max = ifelse(input$sd_N_TM < 1, 1, round(input$sd_N_TM + 6*sqrt(input$sd_N_TM), digits = 0)))
         updateSliderInput(session, "alpha_S_TM", value = input$alpha_N_TM)
         updateSliderInput(session, "power_S_TM", value = input$power_N_TM)
       }
@@ -385,23 +384,25 @@ server = function(input, output, clientData, session){
         updateNumericInput(session, "mu1_N_TM", value = input$mu1_S_TM)
         updateNumericInput(session, "N1_N_TM", value = input$N1_S_TM)
         updateNumericInput(session, "mu2_N_TM", value = input$mu2_S_TM)
+        updateNumericInput(session, "sd_N_TM", value = input$sd_S_TM)
         updateNumericInput(session, "alpha_N_TM", value = input$alpha_S_TM)
         updateNumericInput(session, "power_N_TM", value = input$power_S_TM)
       }
       # Sample Size Calculations
-      mu1 = ifelse(is.null(input$mu1_N_TM), 1, input$mu1_N_TM)
+      mu1 = ifelse(is.null(input$mu1_N_TM), 0, input$mu1_N_TM)
       n1 = ifelse(is.null(input$N1_N_TM), 100, input$N1_N_TM)
-      mu2 = ifelse(is.null(input$mu2_N_TM), 1.3, input$mu2_N_TM)
+      mu2 = ifelse(is.null(input$mu2_N_TM), 1.0, input$mu2_N_TM)
       n2 = NULL
-      d = mu1 - mu2
+      sd = ifelse(is.null(input$sd_N_TM), 1, input$sd_N_TM)
+      d = (mu1 - mu2)/sd
       sig.level = ifelse(is.null(input$alpha_N_TM), 0.05, input$alpha_N_TM)
       power = ifelse(is.null(input$power_N_TM), 0.8, input$power_N_TM)
       alternative = "two.sided"
       n2 = try(round(pwr.t2n.test(n1, n2, d, sig.level, power, alternative)$n2, digits = 0), silent = T)
-      n2 = ifelse(class(n2) == "try-error", 0, n2)
+      n2 = ifelse(class(n2) == "try-error", NaN, n2)
       # Output
       updateNumericInput(session, inputId = "N2_N_TM", value = n2)
-      updateSliderInput(session, inputId = "N2_S_TM", value = n2, max = ifelse(n2 < 10, 10, round(n2 + sqrt(n2), digits = 0)))
+      updateSliderInput(session, inputId = "N2_S_TM", value = n2, max = ifelse(n2 < 10, 10, round(n2 + 6*sqrt(n2), digits = 0)))
     }
     
     ##### Power
@@ -410,10 +411,11 @@ server = function(input, output, clientData, session){
       ### Numeric
       if(NorS_TM$NorS == "N"){
         # Update Slider Inputs
-        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, max = ifelse(input$mu1_N_TM < 10, 10, round(input$mu1_N_TM + sqrt(input$mu1_N_TM), digits = 0)))
-        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(input$N1_N_TM < 10, 10, round(input$N1_N_TM + sqrt(input$N1_N_TM), digits = 0)))
-        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, max = ifelse(input$mu2_N_TM < 10, 10, round(input$mu2_N_TM + sqrt(input$mu2_N_TM), digits = 0)))
-        updateSliderInput(session, "N2_S_TM", value = input$N2_N_TM, max = ifelse(input$N2_N_TM < 10, 10, round(input$N2_N_TM + sqrt(input$N2_N_TM), digits = 0)))
+        updateSliderInput(session, "mu1_S_TM", value = input$mu1_N_TM, min = round(input$mu1_N_TM - max(1, 6*sqrt(abs(input$mu1_N_TM))), digits = 0), max = round(input$mu1_N_TM + max(1, 6*sqrt(abs(input$mu1_N_TM))), digits = 0))
+        updateSliderInput(session, "N1_S_TM", value = input$N1_N_TM, max = ifelse(input$N1_N_TM < 10, 10, round(input$N1_N_TM + 6*sqrt(input$N1_N_TM), digits = 0)))
+        updateSliderInput(session, "mu2_S_TM", value = input$mu2_N_TM, min = round(input$mu2_N_TM - max(1, 6*sqrt(abs(input$mu2_N_TM))), digits = 0), max = round(input$mu2_N_TM + max(1, 6*sqrt(abs(input$mu2_N_TM))), digits = 0))
+        updateSliderInput(session, "N2_S_TM", value = input$N2_N_TM, max = ifelse(input$N2_N_TM < 10, 10, round(input$N2_N_TM + 6*sqrt(input$N2_N_TM), digits = 0)))
+        updateSliderInput(session, "sd_S_TM", value = input$sd_N_TM, max = ifelse(input$sd_N_TM < 1, 1, round(input$sd_N_TM + 6*sqrt(input$sd_N_TM), digits = 0)))
         updateSliderInput(session, "alpha_S_TM", value = input$alpha_N_TM)
       }
       ### Slider
@@ -423,19 +425,21 @@ server = function(input, output, clientData, session){
         updateNumericInput(session, "N1_N_TM", value = input$N1_S_TM)
         updateNumericInput(session, "mu2_N_TM", value = input$mu2_S_TM)
         updateNumericInput(session, "N2_N_TM", value = input$N2_S_TM)
+        updateNumericInput(session, "sd_N_TM", value = input$sd_S_TM)
         updateNumericInput(session, "alpha_N_TM", value = input$alpha_S_TM)
       }
       # Power Calculations
-      mu1 = ifelse(is.null(input$mu1_N_TM), 1, input$mu1_N_TM)
+      mu1 = ifelse(is.null(input$mu1_N_TM), 0, input$mu1_N_TM)
       n1 = ifelse(is.null(input$N1_N_TM), 100, input$N1_N_TM)
-      mu2 = ifelse(is.null(input$mu2_N_TM), 1.3, input$mu2_N_TM)
+      mu2 = ifelse(is.null(input$mu2_N_TM), 1.0, input$mu2_N_TM)
       n2 = ifelse(is.null(input$N2_N_TM), 695, input$N2_N_TM)
-      d = mu1 - mu2
+      sd = ifelse(is.null(input$sd_N_TM), 1, input$sd_N_TM)
+      d = (mu1 - mu2)/sd
       sig.level = ifelse(is.null(input$alpha_N_TM), 0.05, input$alpha_N_TM)
       power = NULL
       alternative = "two.sided"
       power = try(round(pwr.t2n.test(n1, n2, d, sig.level, power, alternative)$power, digits = 2), silent = T)
-      power = ifelse(class(power) == "try-error", 0, power)
+      power = ifelse(class(power) == "try-error", NaN, power)
       # Output
       updateNumericInput(session, inputId = "power_N_TM", value = power)
       updateSliderInput(session, inputId = "power_S_TM", value = power)
@@ -454,26 +458,23 @@ server = function(input, output, clientData, session){
         numericInput(inputId = "N1_N_TP", label = "Sample Size One", value = 100, min = 0, max = NA, step = 1, width = NULL),
         sliderInput(inputId = "N1_S_TP", label = "", min = 0, max = 5000, value = 100, step = 1, round = FALSE, width = NULL),
         numericInput(inputId = "p2_N_TP", label = "Proportion Two", value = 0.7, min = 0, max = 1, step = 0.01, width = NULL),
-        sliderInput(inputId = "p2_S_TP", label = "", min = 0, max = 1, value = 0.7, step = 0.01, round = FALSE, width = NULL),
-        if(input$solvefor_TP == "Power"){
-          list(numericInput(inputId = "N2_N_TP", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
-               sliderInput(inputId = "N2_S_TP", label = "", min = 0, max = 5000, value = 695, step = 1, round = FALSE, width = NULL))},
+        sliderInput(inputId = "p2_S_TP", label = "", min = 0, max = 1, value = 0.7, step = 0.01, round = FALSE, width = NULL)),
+      # Outputs
+      box(
         numericInput(inputId = "alpha_N_TP", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_TP", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_TP == "Sample Size"){
-          list(numericInput(inputId = "power_N_TP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
-               sliderInput(inputId = "power_S_TP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}
-      ),
-      # Outputs
-      box(
-        if(input$solvefor_TP == "Sample Size"){
-          list(numericInput(inputId = "N2_N_TP", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
-               sliderInput(inputId = "N2_S_TP", label = "", min = 0, max = 5000, value = 695, step = 1, round = FALSE, width = NULL))},
+          list(
+            numericInput(inputId = "power_N_TP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            sliderInput(inputId = "power_S_TP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
+            numericInput(inputId = "N2_N_TP", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
+            sliderInput(inputId = "N2_S_TP", label = "", min = 0, max = 5000, value = 695, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_TP == "Power"){
-          list(numericInput(inputId = "power_N_TP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
-               sliderInput(inputId = "power_S_TP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}
-      )
-    )
+          list(
+            numericInput(inputId = "N2_N_TP", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
+            sliderInput(inputId = "N2_S_TP", label = "", min = 0, max = 5000, value = 695, step = 1, round = FALSE, width = NULL),
+            numericInput(inputId = "power_N_TP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            sliderInput(inputId = "power_S_TP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}))
   })
   
   ### Numeric or Slider
@@ -495,9 +496,9 @@ server = function(input, output, clientData, session){
       if(NorS_TP$NorS == "N"){
         ### Update sliderInputs
         updateSliderInput(session, "p1_S_TP", value = input$p1_N_TP)
-        updateSliderInput(session, "N1_S_TP", value = input$N1_N_TP, max = ifelse(input$N1_N_TP < 10, 10, round(input$N1_N_TP + sqrt(input$N1_N_TP), digits = 0)))
+        updateSliderInput(session, "N1_S_TP", value = input$N1_N_TP, max = ifelse(input$N1_N_TP < 10, 10, round(input$N1_N_TP + 6*sqrt(input$N1_N_TP), digits = 0)))
         updateSliderInput(session, "p2_S_TP", value = input$p2_N_TP)
-        updateSliderInput(session, "N2_S_TP", value = input$N2_N_TP, max = ifelse(input$N2_N_TP < 10, 10, round(input$N2_N_TP + sqrt(input$N2_N_TP), digits = 0)))
+        updateSliderInput(session, "N2_S_TP", value = input$N2_N_TP, max = ifelse(input$N2_N_TP < 10, 10, round(input$N2_N_TP + 6*sqrt(input$N2_N_TP), digits = 0)))
         updateSliderInput(session, "alpha_S_TP", value = input$alpha_N_TP)
         updateSliderInput(session, "power_S_TP", value = input$power_N_TP)
       }
@@ -521,10 +522,10 @@ server = function(input, output, clientData, session){
       power = ifelse(is.null(input$power_N_TP), 0.8, input$power_N_TP)
       alternative = "two.sided"
       n2 = try(round(pwr.2p2n.test(h, n1, n2, sig.level, power, alternative)$n2, digits = 0), silent = T)
-      n2 = ifelse(class(n2) == "try-error", 0, n2)
+      n2 = ifelse(class(n2) == "try-error", NaN, n2)
       # Output
       updateNumericInput(session, inputId = "N2_N_TP", value = n2)
-      updateSliderInput(session, inputId = "N2_S_TP", value = n2, max = ifelse(n2 < 10, 10, round(n2 + sqrt(n2), digits = 0)))
+      updateSliderInput(session, inputId = "N2_S_TP", value = n2, max = ifelse(n2 < 10, 10, round(n2 + 6*sqrt(n2), digits = 0)))
     }
     
     ##### Power
@@ -534,9 +535,9 @@ server = function(input, output, clientData, session){
       if(NorS_TP$NorS == "N"){
         # Update Slider Inputs
         updateSliderInput(session, "p1_S_TP", value = input$p1_N_TP)
-        updateSliderInput(session, "N1_S_TP", value = input$N1_N_TP, max = ifelse(input$N1_N_TP < 10, 10, round(input$N1_N_TP + sqrt(input$N1_N_TP), digits = 0)))
+        updateSliderInput(session, "N1_S_TP", value = input$N1_N_TP, max = ifelse(input$N1_N_TP < 10, 10, round(input$N1_N_TP + 6*sqrt(input$N1_N_TP), digits = 0)))
         updateSliderInput(session, "p2_S_TP", value = input$p2_N_TP)
-        updateSliderInput(session, "N2_S_TP", value = input$N2_N_TP, max = ifelse(input$N2_N_TP < 10, 10, round(input$N2_N_TP + sqrt(input$N2_N_TP), digits = 0)))
+        updateSliderInput(session, "N2_S_TP", value = input$N2_N_TP, max = ifelse(input$N2_N_TP < 10, 10, round(input$N2_N_TP + 6*sqrt(input$N2_N_TP), digits = 0)))
         updateSliderInput(session, "alpha_S_TP", value = input$alpha_N_TP)
       }
       ### Slider
@@ -558,7 +559,7 @@ server = function(input, output, clientData, session){
       power = NULL
       alternative = "two.sided"
       power = try(round(pwr.2p2n.test(h, n1, n2, sig.level, power, alternative)$power, digits = 2), silent = T)
-      power = ifelse(class(power) == "try-error", 0, power)
+      power = ifelse(class(power) == "try-error", NaN, power)
       # Output
       updateNumericInput(session, inputId = "power_N_TP", value = power)
       updateSliderInput(session, inputId = "power_S_TP", value = power)
@@ -571,37 +572,27 @@ server = function(input, output, clientData, session){
   output$TTE = renderUI({
     list(
       box(width = 4,
+          numericInput(inputId = "ctrllambda_N_TTE", label = "Control Group's Event Rate per Unit of Time", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+          sliderInput(inputId = "ctrllambda_S_TTE", label = "", min = 0, max = 10, value = 1, step = 0.01, round = FALSE, width = NULL),
+          numericInput(inputId = "explambda_N_TTE", label = "Experimental Group's Event Rate per Unit of Time", value = 1.5, min = 0, max = NA, step = 0.01, width = NULL),
+          sliderInput(inputId = "explambda_S_TTE", label = "", min = 0, max = 10, value = 1.5, step = 0.01, round = FALSE, width = NULL),
+          numericInput(inputId = "ctrlcensorrate_N_TTE", label = "Control Group's Censoring Rate", value = 0, min = 0, max = 1, step = 0.01, width = NULL),
+          sliderInput(inputId = "ctrlcensorrate_S_TTE", label = "", min = 0, max = 1, value = 0, step = 0.01, round = FALSE, width = NULL),
+          numericInput(inputId = "expcensorrate_N_TTE", label = "Experimental Group's Censoring Rate", value = 0, min = 0, max = 1, step = 0.01, width = NULL),
+          sliderInput(inputId = "expcensorrate_S_TTE", label = "", min = 0,  max = 1, value = 0, step = 0.01, round = FALSE, width = NULL)),
+      box(width = 4,
           numericInput(inputId = "alpha_N_TTE", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
           sliderInput(inputId = "alpha_S_TTE", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
           if(input$solvefor_TTE == "Sample Size"){
             list(
               numericInput(inputId = "power_N_TTE", label = "Power", value = 0.8, min = 0, max = 1, step = 0.01, width = NULL),
-              sliderInput(inputId = "power_S_TTE", label = "", min = 0, max = 1, value = 0.8, step = 0.01, round = FALSE, width = NULL))},
-          if(input$solvefor_TTE == "Power"){
-            list(
-              numericInput(inputId = "N_N_TTE", label = "Total Sample Size", value = 194, min = 0, max = NA, step = 1, width = NULL),
-              sliderInput(inputId = "N_S_TTE", label = "", min = 0, max = 250, value = 194, step = 1, round = FALSE, width = NULL)
-            )
-          },
-          numericInput(inputId = "ratio_N_TTE", label = "Sample Allocation Ratio", value = 1, min = 0, max = NA, step = 0.1, width = NULL),
-          sliderInput(inputId = "ratio_S_TTE", label = "", min = 0, max = 5, value = 1, step = 0.1, round = FALSE, width = NULL),
-          numericInput(inputId = "ctrllambda_N_TTE", label = "Control Group's Event Rate per Unit of Time", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
-          sliderInput(inputId = "ctrllambda_S_TTE", label = "", min = 0, max = 10, value = 1, step = 0.01, round = FALSE, width = NULL),
-          numericInput(inputId = "explambda_N_TTE", label = "Experimental Group's Event Rate per Unit of Time", value = 1.5, min = 0, max = NA, step = 0.01, width = NULL),
-          sliderInput(inputId = "explambda_S_TTE", label = "", min = 0, max = 10, value = 1.5, step = 0.01, round = FALSE, width = NULL),
-          if(input$solvefor_TTE == "Sample Size"){
-            list(
-              numericInput(inputId = "ctrlcensorrate_N_TTE", label = "Control Group's Censoring Rate", value = 0, min = 0, max = 1, step = 0.01, width = NULL),
-              sliderInput(inputId = "ctrlcensorrate_S_TTE", label = "", min = 0, max = 1, value = 0, step = 0.01, round = FALSE, width = NULL),
-              numericInput(inputId = "expcensorrate_N_TTE", label = "Experimental Group's Censoring Rate", value = 0, min = 0, max = 1, step = 0.01, width = NULL),
-              sliderInput(inputId = "expcensorrate_S_TTE", label = "", min = 0,  max = 1, value = 0, step = 0.01, round = FALSE, width = NULL))}),
-      box(width = 4,
-          if(input$solvefor_TTE == "Sample Size"){
-            list(
+              sliderInput(inputId = "power_S_TTE", label = "", min = 0, max = 1, value = 0.8, step = 0.01, round = FALSE, width = NULL),
               numericInput(inputId = "N_N_TTE",  label = "Total Sample Size", value = 194, min = 0, max = NA, step = 0.01, width = NULL),
               sliderInput(inputId = "N_S_TTE", label = "", min = 0, max = 250, value = 194, step = 0.01, round = FALSE, width = NULL))},
           if(input$solvefor_TTE == "Power"){
             list(
+              numericInput(inputId = "N_N_TTE", label = "Total Sample Size", value = 194, min = 0, max = NA, step = 1, width = NULL),
+              sliderInput(inputId = "N_S_TTE", label = "", min = 0, max = 250, value = 194, step = 1, round = FALSE, width = NULL),
               numericInput(inputId = "power_N_TTE", label = "Power", value = 0.8, min = 0, max = 1, step = 0.01, width = NULL),
               sliderInput(inputId = "power_S_TTE", label = "", min = 0, max = 1, value = 0.8, step = 0.01, round = FALSE, width = NULL))}))
   })
@@ -623,21 +614,21 @@ server = function(input, output, clientData, session){
     if(input$solvefor_TTE == "Sample Size"){
       #### numericInput was updated
       if(NorS_TTE$NorS == "N"){
-        updateSliderInput(session, "studyduration_S_TTE", value = input$studyduration_N_TTE, max = ifelse(input$studyduration_N_TTE < 10, 10, round(input$studyduration_N_TTE + sqrt(input$studyduration_N_TTE), digits = 0)))
-        updateSliderInput(session, "enrollmentduration_S_TTE", value = input$enrollmentduration_N_TTE, max = ifelse(input$enrollmentduration_N_TTE < 10, 10, round(input$enrollmentduration_N_TTE + sqrt(input$enrollmentduration_N_TTE), digits = 0)))
-        updateSliderInput(session, "gamma_S_TTE", value = input$gamma_N_TTE, max = ifelse(input$gamma_N_TTE < 10, 10, round(input$gamma_N_TTE + sqrt(input$gamma_N_TTE), digits = 0)))
+        updateSliderInput(session, "studyduration_S_TTE", value = input$studyduration_N_TTE, max = ifelse(input$studyduration_N_TTE < 10, 10, round(input$studyduration_N_TTE + 6*sqrt(input$studyduration_N_TTE), digits = 0)))
+        updateSliderInput(session, "enrollmentduration_S_TTE", value = input$enrollmentduration_N_TTE, max = input$studyduration_N_TTE)
+        updateSliderInput(session, "gamma_S_TTE", value = input$gamma_N_TTE, max = ifelse(input$gamma_N_TTE < 10, 10, round(input$gamma_N_TTE + 6*sqrt(input$gamma_N_TTE), digits = 0)))
         updateSliderInput(session, "alpha_S_TTE", value = input$alpha_N_TTE)
         updateSliderInput(session, "power_S_TTE", value = input$power_N_TTE)
-        updateSliderInput(session, "ratio_S_TTE", value = input$ratio_N_TTE, max = ifelse(input$ratio_N_TTE < 10, 10, round(input$ratio_N_TTE + sqrt(input$ratio_N_TTE), digits = 0)))
-        updateSliderInput(session, "ctrllambda_S_TTE", value = input$ctrllambda_N_TTE, max = ifelse(input$ctrllambda_N_TTE < 10, 10, round(input$ctrllambda_N_TTE + sqrt(input$ctrllambda_N_TTE), digits = 0)))
-        updateSliderInput(session, "explambda_S_TTE", value = input$explambda_N_TTE, max = ifelse(input$explambda_N_TTE < 10, 10, round(input$explambda_N_TTE + sqrt(input$explambda_N_TTE), digits = 0)))
+        updateSliderInput(session, "ratio_S_TTE", value = input$ratio_N_TTE, max = ifelse(input$ratio_N_TTE < 10, 10, round(input$ratio_N_TTE + 6*sqrt(input$ratio_N_TTE), digits = 0)))
+        updateSliderInput(session, "ctrllambda_S_TTE", value = input$ctrllambda_N_TTE, max = ifelse(input$ctrllambda_N_TTE < 10, 10, round(input$ctrllambda_N_TTE + 6*sqrt(input$ctrllambda_N_TTE), digits = 0)))
+        updateSliderInput(session, "explambda_S_TTE", value = input$explambda_N_TTE, max = ifelse(input$explambda_N_TTE < 10, 10, round(input$explambda_N_TTE + 6*sqrt(input$explambda_N_TTE), digits = 0)))
         updateSliderInput(session, "ctrlcensorrate_S_TTE", value = input$ctrlcensorrate_N_TTE)
         updateSliderInput(session, "expcensorrate_S_TTE", value = input$expcensorrate_N_TTE)
       }
       #### sliderInput was updated
       if(NorS_TTE$NorS == "S"){
         updateNumericInput(session, "studyduration_N_TTE", value = input$studyduration_S_TTE)
-        updateNumericInput(session, "enrollmentduration_N_TTE", value = input$enrollmentduration_S_TTE)
+        updateNumericInput(session, "enrollmentduration_N_TTE", value = input$enrollmentduration_S_TTE, max = input$studyduration_S_TTE)
         updateNumericInput(session, "gamma_N_TTE", value = input$gamma_S_TTE)
         updateNumericInput(session, "alpha_N_TTE", value = input$alpha_S_TTE)
         updateNumericInput(session, "power_N_TTE", value = input$power_S_TTE)
@@ -655,7 +646,9 @@ server = function(input, output, clientData, session){
       expcensorrate = ifelse(is.null(input$expcensorrate_N_TTE), 0, input$expcensorrate_N_TTE)
       lambda2 = explambda*(explambda/(explambda + expcensorrate))
       Tstudy = ifelse(is.null(input$studyduration_N_TTE), 5, input$studyduration_N_TTE)
-      Tenrollment = ifelse(is.null(input$enrollmentduration_N_TTE) | input$enrollmentduration_N_TTE == 0, 0.1^10, input$enrollmentduration_N_TTE)
+      Tenrollment = ifelse(input$enrollment_SE_TTE == "All at once", 0,
+                           ifelse(input$enrollment_SE_TTE == "Continuous Throughout", Tstudy,
+                                  ifelse(is.null(input$enrollmentduration_N_TTE) | input$enrollmentduration_N_TTE == 0, 0.1^10, input$enrollmentduration_N_TTE)))
       eta = 0
       ratio = ifelse(is.null(input$ratio_N_TTE), 1, input$ratio_N_TTE)
       alpha = ifelse(is.null(input$alpha_N_TTE), 0.05, input$alpha_N_TTE)
@@ -664,11 +657,12 @@ server = function(input, output, clientData, session){
       approx = FALSE
       type = "rr" # Im not sure
       entry = ifelse(is.null(input$enrollmentdist_SE_TTE), "unif", ifelse(input$enrollmentdist_SE_TTE == "Uniform", "unif", "expo"))
-      gamma = ifelse(is.null(input$gamma_N_TTE), NA, input$gamma_N_TTE) # Is this how its supposed to be?
-      N = ceiling(nSurvival(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma)$n)
+      gamma = ifelse(is.null(input$gamma_N_TTE), NA, input$gamma_N_TTE)
+      N = try(ceiling(nSurvival(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma)$n), silent = TRUE)
+      N = ifelse(class(N) == "try-error", NaN, N)
       # Output
-      updateNumericInput(session, inputId = "N_N_TTE", value = N, max = N + sqrt(N))
-      updateSliderInput(session, inputId = "N_S_TTE", value = N, max = N + sqrt(N))
+      updateNumericInput(session, inputId = "N_N_TTE", value = N, max = N + 6*sqrt(N))
+      updateSliderInput(session, inputId = "N_S_TTE", value = N, max = N + 6*sqrt(N))
     }
     
     ##### Power
@@ -676,21 +670,21 @@ server = function(input, output, clientData, session){
       #### Prep
       #### numericInput was updated
       if(NorS_TTE$NorS == "N"){
-        updateSliderInput(session, "studyduration_S_TTE", value = input$studyduration_N_TTE, max = ifelse(input$studyduration_N_TTE < 10, 10, round(input$studyduration_N_TTE + sqrt(input$studyduration_N_TTE), digits = 0)))
-        updateSliderInput(session, "enrollmentduration_S_TTE", value = input$enrollmentduration_N_TTE, max = ifelse(input$enrollmentduration_N_TTE < 10, 10, round(input$enrollmentduration_N_TTE + sqrt(input$enrollmentduration_N_TTE), digits = 0)))
-        updateSliderInput(session, "gamma_S_TTE", value = input$gamma_N_TTE, max = ifelse(input$gamma_N_TTE < 10, 10, round(input$gamma_N_TTE + sqrt(input$gamma_N_TTE), digits = 0)))
+        updateSliderInput(session, "studyduration_S_TTE", value = input$studyduration_N_TTE, max = ifelse(input$studyduration_N_TTE < 10, 10, round(input$studyduration_N_TTE + 6*sqrt(input$studyduration_N_TTE), digits = 0)))
+        updateSliderInput(session, "enrollmentduration_S_TTE", value = input$enrollmentduration_N_TTE, max = input$studyduration_N_TTE)
+        updateSliderInput(session, "gamma_S_TTE", value = input$gamma_N_TTE, max = ifelse(input$gamma_N_TTE < 10, 10, round(input$gamma_N_TTE + 6*sqrt(input$gamma_N_TTE), digits = 0)))
         updateSliderInput(session, "alpha_S_TTE", value = input$alpha_N_TTE)
-        updateSliderInput(session, "N_S_TTE", value = input$N_N_TTE, max = ifelse(input$N_N_TTE < 10, 10, round(input$N_N_TTE + sqrt(input$N_N_TTE), digits = 0)))
-        updateSliderInput(session, "ratio_S_TTE", value = input$ratio_N_TTE, max = ifelse(input$ratio_N_TTE < 10, 10, round(input$ratio_N_TTE + sqrt(input$ratio_N_TTE), digits = 0)))
-        updateSliderInput(session, "ctrllambda_S_TTE", value = input$ctrllambda_N_TTE, max = ifelse(input$ctrllambda_N_TTE < 10, 10, round(input$ctrllambda_N_TTE + sqrt(input$ctrllambda_N_TTE), digits = 0)))
-        updateSliderInput(session, "explambda_S_TTE", value = input$explambda_N_TTE, max = ifelse(input$explambda_N_TTE < 10, 10, round(input$explambda_N_TTE + sqrt(input$explambda_N_TTE), digits = 0)))
+        updateSliderInput(session, "N_S_TTE", value = input$N_N_TTE, max = ifelse(input$N_N_TTE < 10, 10, round(input$N_N_TTE + 6*sqrt(input$N_N_TTE), digits = 0)))
+        updateSliderInput(session, "ratio_S_TTE", value = input$ratio_N_TTE, max = ifelse(input$ratio_N_TTE < 10, 10, round(input$ratio_N_TTE + 6*sqrt(input$ratio_N_TTE), digits = 0)))
+        updateSliderInput(session, "ctrllambda_S_TTE", value = input$ctrllambda_N_TTE, max = ifelse(input$ctrllambda_N_TTE < 10, 10, round(input$ctrllambda_N_TTE + 6*sqrt(input$ctrllambda_N_TTE), digits = 0)))
+        updateSliderInput(session, "explambda_S_TTE", value = input$explambda_N_TTE, max = ifelse(input$explambda_N_TTE < 10, 10, round(input$explambda_N_TTE + 6*sqrt(input$explambda_N_TTE), digits = 0)))
         updateSliderInput(session, "ctrlcensorrate_S_TTE", value = input$ctrlcensorrate_N_TTE)
         updateSliderInput(session, "expcensorrate_S_TTE", value = input$expcensorrate_N_TTE)
       }
       #### sliderInput was updated
       if(NorS_TTE$NorS == "S"){
         updateNumericInput(session, "studyduration_N_TTE", value = input$studyduration_S_TTE)
-        updateNumericInput(session, "enrollmentduration_N_TTE", value = input$enrollmentduration_S_TTE)
+        updateNumericInput(session, "enrollmentduration_N_TTE", value = input$enrollmentduration_S_TTE, max = input$studyduration_S_TTE)
         updateNumericInput(session, "gamma_N_TTE", value = input$gamma_S_TTE)
         updateNumericInput(session, "alpha_N_TTE", value = input$alpha_S_TTE)
         updateNumericInput(session, "N_N_TTE", value = input$N_S_TTE)
@@ -708,7 +702,9 @@ server = function(input, output, clientData, session){
       expcensorrate = ifelse(is.null(input$expcensorrate_N_TTE), 0, input$expcensorrate_N_TTE)
       lambda2 = explambda*(explambda/(explambda + expcensorrate))
       Tstudy = ifelse(is.null(input$studyduration_N_TTE), 5, input$studyduration_N_TTE)
-      Tenrollment = ifelse(is.null(input$enrollmentduration_N_TTE) | input$enrollmentduration_N_TTE == 0, 0.1^10, input$enrollmentduration_N_TTE)
+      Tenrollment = ifelse(input$enrollment_SE_TTE == "All at once", 0,
+                           ifelse(input$enrollment_SE_TTE == "Continuous Throughout", Tstudy,
+                                  ifelse(is.null(input$enrollmentduration_N_TTE) | input$enrollmentduration_N_TTE == 0, 0.1^10, input$enrollmentduration_N_TTE)))
       eta = 0
       ratio = ifelse(is.null(input$ratio_N_TTE), 1, input$ratio_N_TTE)
       alpha = ifelse(is.null(input$alpha_N_TTE), 0.05, input$alpha_N_TTE)
@@ -717,7 +713,7 @@ server = function(input, output, clientData, session){
       approx = FALSE
       type = "rr" # Im not sure
       entry = ifelse(is.null(input$enrollmentdist_SE_TTE) | input$enrollmentdist_SE_TTE == "Uniform", "unif", "expo")
-      gamma = ifelse(is.null(input$gamma_N_TTE), NA, input$gamma_N_TTE) # This NA could be a problem
+      gamma = ifelse(is.null(input$gamma_N_TTE), NA, input$gamma_N_TTE)
       # Use nSurvival with input$ for all except use power = 0.8
       survival = nSurvival(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma)
       # Calculate ratio of events per person ($nEvents/$n)
@@ -729,7 +725,8 @@ server = function(input, output, clientData, session){
       hr = lambda1/lambda2
       hr0 = 1
       tbl = FALSE
-      power = round(nEvents(hr = hr, alpha = alpha, beta = NULL, ratio = ratio, sided = sided, hr0 = hr0, n = nevents, tbl = tbl), digits = 2)
+      power = try(round(nEvents(hr = hr, alpha = alpha, beta = NULL, ratio = ratio, sided = sided, hr0 = hr0, n = nevents, tbl = tbl), digits = 2), silent = TRUE)
+      power = ifelse(class(power) == "try-error", NaN, power)
       # Output
       updateSliderInput(session, "power_S_TTE", value = power)
       updateNumericInput(session, "power_N_TTE", value = power)
