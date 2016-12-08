@@ -15,35 +15,35 @@ server = function(input, output, clientData, session){
     list(
       # Inputs
       box(
-        numericInput(inputId = "mu_N_OM", label = "Mean", value = 0, min = NA, max = NA, step = 0.01, width = NULL),
+        numericInput(inputId = "mu_N_OM", label = p("Mean: ", em("of the experimental population")), value = 0, min = NA, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "mu_S_OM", label = "", min = -10, max = 10, value = 0, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_OM %in% c("Sample Size", "Power")){
           list(
-            numericInput(inputId = "nullmu_N_OM", label = "Hypothesis Mean", value = 1.0, min = 0, max = NA, step = 0.01, width = NULL),
+            numericInput(inputId = "nullmu_N_OM", label = p("True Mean: ", em("of the control population")), value = 1.0, min = 0, max = NA, step = 0.01, width = NULL),
             sliderInput(inputId = "nullmu_S_OM", label = "", min = -10, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL))},
-        numericInput(inputId = "sd_N_OM", label = "SD", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+        numericInput(inputId = "sd_N_OM", label = p("Standard Deviation:", em("within the experimental population")), value = 1, min = 0, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "sd_S_OM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL)),
       # Outputs
       box(
-        numericInput(inputId = "alpha_N_OM", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
+        numericInput(inputId = "alpha_N_OM", label = p("Significance Level: ", em("The probability of rejecting a true null hypothesis")), value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_OM", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_OM == "Sample Size"){
           list(
-            numericInput(inputId = "power_N_OM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_OM", label = p("Power: ", em("The probability of rejecting a false null hypothesis")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_OM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
-            numericInput(inputId = "N_N_OM", label = "Sample Size", value = 150, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OM", label = p("Sample Size: ", em("Calculated sample size needed given the current parameter values")), value = 150, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 1000, value = 150, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_OM == "Power"){
           list(
-            numericInput(inputId = "N_N_OM", label = "Sample Size", value = 150, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OM", label = p("Sample Size: ", em("Sample size of expiremental population")), value = 150, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 1000, value = 150, step = 1, round = FALSE, width = NULL),
-            numericInput(inputId = "power_N_OM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_OM", label = p("Power: ", em("Calculated power of this study given the current parameter values")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_OM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))},
         if(input$solvefor_OM == "Precision"){
           list(
-            numericInput(inputId = "moe_N_OM", label = "+/- Precision", value = 0.2, min = 0, max = NA, step = 0.1, width = NULL),
+            numericInput(inputId = "moe_N_OM", label = p("Precision: ", em("Confidence Interval = Mean +/- Precision")), value = 0.2, min = 0, max = NA, step = 0.1, width = NULL),
             sliderInput(inputId = "moe_S_OM", label = "", min = 0, max = 3, value = 0.2, step = 0.1, round = FALSE, width = NULL),
-            sliderInput(inputId = "ci_S_OM", label = "Confidence Interval", min = 0, max = 3, value = c(0.57, 0.97), step = 0.1, round = FALSE, width = NULL))}))
+            sliderInput(inputId = "ci_S_OM", label = p("Confidence Interval: ", em("The mean is ", round((1 - input$alpha_N_OM)*100, digits = 0), "% likely to be within this interval")), min = -3, max = 3, value = c(-0.2, 0.2), step = 0.1, round = FALSE, width = NULL))}))
   })
   
   ### Numeric or Slider
@@ -157,7 +157,8 @@ server = function(input, output, clientData, session){
       mu = ifelse(is.null(input$mu_N_OM), 0, input$mu_N_OM)
       sd = ifelse(is.null(input$sd_N_OM), 1, input$sd_N_OM)
       n = ifelse(is.null(input$N_N_OM), 150, input$N_N_OM)
-      alpha = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
+      # alpha = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
+      alpha = 0.05
       Z.alpha.2 = qnorm(1 - alpha/2)
       se = sd/sqrt(n)
       moe = round(Z.alpha.2*se, digits = 2)
@@ -166,7 +167,7 @@ server = function(input, output, clientData, session){
       # Output
       updateNumericInput(session, "moe_N_OM", value = moe)
       updateSliderInput(session, "moe_S_OM", value = moe, max = ifelse(moe < 1, 1, round(moe + sqrt(moe), digits = 0)))
-      updateSliderInput(session, "ci_S_OM", value = c(lo, hi), max = ifelse(hi < 1, 1, round(hi + sqrt(hi), digits = 0)))
+      updateSliderInput(session, "ci_S_OM", value = c(lo, hi), min = ifelse(lo > -1, -1, round(lo - sqrt(abs(lo)), digits = 0)), max = ifelse(hi < 1, 1, round(hi + sqrt(abs(hi)), digits = 0)))
     }
   })
   ############################## One Mean ##############################
@@ -178,33 +179,37 @@ server = function(input, output, clientData, session){
     list(
       # Inputs
       box(
-        numericInput(inputId = "p_N_OP", label = "Proportion", value = 0.5, min = 0, max = 1, step = 0.01, width = NULL),
+        numericInput(inputId = "p_N_OP", label = p("Proportion: ", em("of the expiremental population")), value = 0.5, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "p_S_OP", label = "", min = 0, max = 1, value = 0.5, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_OP %in% c("Sample Size", "Power")){
           list(
-            numericInput(inputId = "nullp_N_OP", label = "Hypothesis Proportion", value = 0.52, min = 0, max = 1, step = 0.01, width = NULL),
-            sliderInput(inputId = "nullp_S_OP", label = "", min = 0, max = 1, value = 0.52, step = 0.01, round = FALSE, width = NULL))}),
+            numericInput(inputId = "nullp_N_OP", label = p("True Proportion :", em("of the control population")), value = 0.52, min = 0, max = 1, step = 0.01, width = NULL),
+            sliderInput(inputId = "nullp_S_OP", label = "", min = 0, max = 1, value = 0.52, step = 0.01, round = FALSE, width = NULL))},
+        if(input$solvefor_OP == "Precision"){
+          list(
+            numericInput(inputId = "N_N_OP", label = p("Sample Size: ", em("Sample size of expiremental population")), value = 4903, min = 0, max = NA, step = 1, width = NULL),
+            sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 5000, value = 4903, step = 1, round = FALSE, width = NULL))}),
       # Output
       box(
-        numericInput(inputId = "alpha_N_OP", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
+        numericInput(inputId = "alpha_N_OP", label = p("Significance Level: ", em("Probability of rejecting a true null hypothesis")), value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_OP", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_OP == "Sample Size"){
           list(
-            numericInput(inputId = "power_N_OP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_OP", label = p("Power: ", em("Probability of rejecting a false null hypothesis")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_OP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
-            numericInput(inputId = "N_N_OP", label = "Sample Size", value = 4903, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OP", label = p("Sample Size: ", em("Calculated sample size needed given the current parameter values")), value = 4903, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 5000, value = 4903, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_OP == "Power"){
           list(
-            numericInput(inputId = "N_N_OP", label = "Sample Size", value = 4903, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OP", label = p("Sample Size: ", em("Sample size of expiremental population")), value = 4903, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 5000, value = 4903, step = 1, round = FALSE, width = NULL),
-            numericInput(inputId = "power_N_OP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_OP", label = p("Power: ", em("Calculated power of this study given the current parameter values")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_OP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))},
         if(input$solvefor_OP == "Precision"){
           list(
-            numericInput(inputId = "moe_N_OP", label = "+/- Precision", value = 0.01, min = 0, max = NA, step = 0.01, width = NULL),
+            numericInput(inputId = "moe_N_OP", label = p("Precision: ", em("Confidence Interval = Mean +/- Precision")), value = 0.01, min = 0, max = NA, step = 0.01, width = NULL),
             sliderInput(inputId = "moe_S_OP", label = "", min = 0, max = 1, value = 0.01, step = 0.01, round = FALSE, width = NULL),
-            sliderInput(inputId = "ci_S_OP", label = "Confidence Interval", min = 0, max = 1, value = c(0.49, 0.51), step = 0.1, round = FALSE, width = NULL))}))
+            sliderInput(inputId = "ci_S_OP", label = p("Confidence Interval: ", em("The proportion is ", round((1 - input$alpha_N_OM)*100, digits = 0), "% likely to be within this interval")), min = 0, max = 1, value = c(0.49, 0.51), step = 0.1, round = FALSE, width = NULL))}))
   })
   
   ### Numeric or Slider
@@ -327,29 +332,29 @@ server = function(input, output, clientData, session){
     list(
       # Inputs
       box(
-        numericInput(inputId = "mu1_N_TM", label = "Mean One", value = 0, min = NA, max = NA, step = 0.01, width = NULL),
+        numericInput(inputId = "mu1_N_TM", label = p("Mean One: ", em("The mean of population one")), value = 0, min = NA, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "mu1_S_TM", label = "", min = -10, max = 10, value = 0, step = 0.01, round = FALSE, width = NULL),
-        numericInput(inputId = "N1_N_TM", label = "Sample Size One", value = 100, min = 0, max = NA, step = 1, width = NULL),
+        numericInput(inputId = "N1_N_TM", label = p("Sample Size One: ", em("The sample size of population one")), value = 100, min = 0, max = NA, step = 1, width = NULL),
         sliderInput(inputId = "N1_S_TM", label = "", min = 0, max = 10000, value = 100, step = 1, round = FALSE, width = NULL),
-        numericInput(inputId = "mu2_N_TM", label = "Mean Two", value = 1.0, min = NA, max = NA, step = 0.01, width = NULL),
+        numericInput(inputId = "mu2_N_TM", label = p("Mean Two: ", em("The mean of population two")), value = 1.0, min = NA, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "mu2_S_TM", label = "", min = -10, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL),
-        numericInput(inputId = "sd_N_TM", label = "Standard Deviation", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+        numericInput(inputId = "sd_N_TM", label = p("Standard Deviation: ", em("The standard deviation of the entire population")), value = 1, min = 0, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "sd_S_TM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL)),
       # Outputs
       box(
-        numericInput(inputId = "alpha_N_TM", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
+        numericInput(inputId = "alpha_N_TM", label = p("Significance Level: ", em("Probability of rejecting a true null hypothesis")), value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_TM", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_TM == "Sample Size"){
           list(
-            numericInput(inputId = "power_N_TM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_TM", label = p("Power: ", em("Probability of rejecting a false null hypothesis")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_TM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
-            numericInput(inputId = "N2_N_TM", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N2_N_TM", label = p("Sample Size Two: ", em("Calculated sample size of population two")), value = 695, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N2_S_TM", label = "", min = 0, max = 10000, value = 695, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_TM == "Power"){
           list(
-            numericInput(inputId = "N2_N_TM", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N2_N_TM", label = p("Sample Size Two: ", em("The sample size of population two")), value = 695, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N2_S_TM", label = "", min = 0, max = 10000, value = 695, step = 1, round = FALSE, width = NULL),
-            numericInput(inputId = "power_N_TM", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_TM", label = p("Power: ", em("Calculated power given the current parameter values")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_TM", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}))
   })
   
@@ -453,27 +458,27 @@ server = function(input, output, clientData, session){
     list(
       # Inputs
       box(
-        numericInput(inputId = "p1_N_TP", label = "Proportion One", value = 0.5, min = 0, max = 1, step = 0.01, width = NULL),
+        numericInput(inputId = "p1_N_TP", label = p("Proportion One: ", em("The proportion of population one")), value = 0.5, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "p1_S_TP", label = "", min = 0, max = 1, value = 0.5, step = 0.01, round = FALSE, width = NULL),
-        numericInput(inputId = "N1_N_TP", label = "Sample Size One", value = 100, min = 0, max = NA, step = 1, width = NULL),
+        numericInput(inputId = "N1_N_TP", label = p("Sample Size One: ", em("The sample size of population one")), value = 100, min = 0, max = NA, step = 1, width = NULL),
         sliderInput(inputId = "N1_S_TP", label = "", min = 0, max = 5000, value = 100, step = 1, round = FALSE, width = NULL),
-        numericInput(inputId = "p2_N_TP", label = "Proportion Two", value = 0.7, min = 0, max = 1, step = 0.01, width = NULL),
+        numericInput(inputId = "p2_N_TP", label = p("Proportion Two: ", em("The proportion of population two")), value = 0.7, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "p2_S_TP", label = "", min = 0, max = 1, value = 0.7, step = 0.01, round = FALSE, width = NULL)),
       # Outputs
       box(
-        numericInput(inputId = "alpha_N_TP", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
+        numericInput(inputId = "alpha_N_TP", label = p("Significance Level: ", em("Probability of rejecting a true null hypothesis")), value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_TP", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_TP == "Sample Size"){
           list(
-            numericInput(inputId = "power_N_TP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_TP", label = p("Power: ", em("Probability of rejecting a false null hypothesis")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_TP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL),
-            numericInput(inputId = "N2_N_TP", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N2_N_TP", label = p("Sample Size Two: ", em("Calculated sample size of population two")), value = 695, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N2_S_TP", label = "", min = 0, max = 5000, value = 695, step = 1, round = FALSE, width = NULL))},
         if(input$solvefor_TP == "Power"){
           list(
-            numericInput(inputId = "N2_N_TP", label = "Sample Size Two", value = 695, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N2_N_TP", label = p("Sample Size Two: ", em("The sample size of population two")), value = 695, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N2_S_TP", label = "", min = 0, max = 5000, value = 695, step = 1, round = FALSE, width = NULL),
-            numericInput(inputId = "power_N_TP", label = "Power", value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
+            numericInput(inputId = "power_N_TP", label = p("Power: ", em("Calculated power given the current parameter values")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
             sliderInput(inputId = "power_S_TP", label = "", min = 0, max = 1, value = 0.8, step = 0.05, round = FALSE, width = NULL))}))
   })
   
@@ -572,28 +577,28 @@ server = function(input, output, clientData, session){
   output$TTE = renderUI({
     list(
       box(width = 4,
-          numericInput(inputId = "ctrllambda_N_TTE", label = "Control Group's Event Rate per Unit of Time", value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+          numericInput(inputId = "ctrllambda_N_TTE", label = p("Control Event Rate: ", em("Control group's event rate per unit of time (This can be greater than 1)")), value = 1, min = 0, max = NA, step = 0.01, width = NULL),
           sliderInput(inputId = "ctrllambda_S_TTE", label = "", min = 0, max = 10, value = 1, step = 0.01, round = FALSE, width = NULL),
-          numericInput(inputId = "explambda_N_TTE", label = "Experimental Group's Event Rate per Unit of Time", value = 1.5, min = 0, max = NA, step = 0.01, width = NULL),
+          numericInput(inputId = "explambda_N_TTE", label = p("Experimental Event Rate: ", em("Experimental group's event rate per unit of time (This can be greater than 1)")), value = 1.5, min = 0, max = NA, step = 0.01, width = NULL),
           sliderInput(inputId = "explambda_S_TTE", label = "", min = 0, max = 10, value = 1.5, step = 0.01, round = FALSE, width = NULL),
-          numericInput(inputId = "ctrlcensorrate_N_TTE", label = "Control Group's Censoring Rate", value = 0, min = 0, max = 1, step = 0.01, width = NULL),
+          numericInput(inputId = "ctrlcensorrate_N_TTE", label = p("Control Censoring Rate", em("Proportion of control group's events that are censored (This must be between 0 and 1")), value = 0, min = 0, max = 1, step = 0.01, width = NULL),
           sliderInput(inputId = "ctrlcensorrate_S_TTE", label = "", min = 0, max = 1, value = 0, step = 0.01, round = FALSE, width = NULL),
-          numericInput(inputId = "expcensorrate_N_TTE", label = "Experimental Group's Censoring Rate", value = 0, min = 0, max = 1, step = 0.01, width = NULL),
+          numericInput(inputId = "expcensorrate_N_TTE", label = p("Experimental Censoring Rate", em("Proportion of experimental group's events that are censored (This must be between 0 and 1")), value = 0, min = 0, max = 1, step = 0.01, width = NULL),
           sliderInput(inputId = "expcensorrate_S_TTE", label = "", min = 0,  max = 1, value = 0, step = 0.01, round = FALSE, width = NULL)),
       box(width = 4,
-          numericInput(inputId = "alpha_N_TTE", label = "Significance Level", value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
+          numericInput(inputId = "alpha_N_TTE", label = p("Significance Level: ", em("Probability of rejecting a true null hypothesis")), value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
           sliderInput(inputId = "alpha_S_TTE", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
           if(input$solvefor_TTE == "Sample Size"){
             list(
-              numericInput(inputId = "power_N_TTE", label = "Power", value = 0.8, min = 0, max = 1, step = 0.01, width = NULL),
+              numericInput(inputId = "power_N_TTE", label = p("Power: ", em("Probability of rejecting a false null hypothesis")), value = 0.8, min = 0, max = 1, step = 0.01, width = NULL),
               sliderInput(inputId = "power_S_TTE", label = "", min = 0, max = 1, value = 0.8, step = 0.01, round = FALSE, width = NULL),
-              numericInput(inputId = "N_N_TTE",  label = "Total Sample Size", value = 194, min = 0, max = NA, step = 0.01, width = NULL),
+              numericInput(inputId = "N_N_TTE",  label = p("Total Sample Size: ", em("Calculated total sample size given the current parameter values")), value = 194, min = 0, max = NA, step = 0.01, width = NULL),
               sliderInput(inputId = "N_S_TTE", label = "", min = 0, max = 250, value = 194, step = 0.01, round = FALSE, width = NULL))},
           if(input$solvefor_TTE == "Power"){
             list(
-              numericInput(inputId = "N_N_TTE", label = "Total Sample Size", value = 194, min = 0, max = NA, step = 1, width = NULL),
+              numericInput(inputId = "N_N_TTE", label = p("Total Sample Size: ", em("The combined sample size of both groups")), value = 194, min = 0, max = NA, step = 1, width = NULL),
               sliderInput(inputId = "N_S_TTE", label = "", min = 0, max = 250, value = 194, step = 1, round = FALSE, width = NULL),
-              numericInput(inputId = "power_N_TTE", label = "Power", value = 0.8, min = 0, max = 1, step = 0.01, width = NULL),
+              numericInput(inputId = "power_N_TTE", label = p("Power: ", em("Calculated power given the current parameter values")), value = 0.8, min = 0, max = 1, step = 0.01, width = NULL),
               sliderInput(inputId = "power_S_TTE", label = "", min = 0, max = 1, value = 0.8, step = 0.01, round = FALSE, width = NULL))}))
   })
   
@@ -616,7 +621,7 @@ server = function(input, output, clientData, session){
       if(NorS_TTE$NorS == "N"){
         updateSliderInput(session, "studyduration_S_TTE", value = input$studyduration_N_TTE, max = ifelse(input$studyduration_N_TTE < 10, 10, round(input$studyduration_N_TTE + 6*sqrt(input$studyduration_N_TTE), digits = 0)))
         updateSliderInput(session, "enrollmentduration_S_TTE", value = input$enrollmentduration_N_TTE, max = input$studyduration_N_TTE)
-        updateSliderInput(session, "gamma_S_TTE", value = input$gamma_N_TTE, max = ifelse(input$gamma_N_TTE < 10, 10, round(input$gamma_N_TTE + 6*sqrt(input$gamma_N_TTE), digits = 0)))
+        updateSliderInput(session, "gamma_S_TTE", value = input$gamma_N_TTE, max = ifelse(input$gamma_N_TTE < 1, 1, round(input$gamma_N_TTE + 6*sqrt(input$gamma_N_TTE), digits = 0)))
         updateSliderInput(session, "alpha_S_TTE", value = input$alpha_N_TTE)
         updateSliderInput(session, "power_S_TTE", value = input$power_N_TTE)
         updateSliderInput(session, "ratio_S_TTE", value = input$ratio_N_TTE, max = ifelse(input$ratio_N_TTE < 10, 10, round(input$ratio_N_TTE + 6*sqrt(input$ratio_N_TTE), digits = 0)))
