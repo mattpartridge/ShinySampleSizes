@@ -22,7 +22,11 @@ server = function(input, output, clientData, session){
             numericInput(inputId = "nullmu_N_OM", label = p("True Mean: ", em("of the control population")), value = 1.0, min = NA, max = NA, step = 0.01, width = NULL),
             sliderInput(inputId = "nullmu_S_OM", label = "", min = -10, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL))},
         numericInput(inputId = "sd_N_OM", label = p("Standard Deviation:", em("within the experimental population")), value = 1, min = 0, max = NA, step = 0.01, width = NULL),
-        sliderInput(inputId = "sd_S_OM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL)),
+        sliderInput(inputId = "sd_S_OM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL),
+        if(input$solvefor_OM == "Precision"){
+          list(
+            numericInput(inputId = "N_N_OM", label = p("Sample Size: ", em("Sample size of expiremental population")), value = 150, min = 0, max = NA, step = 1, width = NULL),
+            sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 1000, value = 150, step = 1, round = FALSE, width = NULL))}),
       # Outputs
       box(
         numericInput(inputId = "alpha_N_OM", label = p("Significance Level: ", em("The probability of rejecting a true null hypothesis")), value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),

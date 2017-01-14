@@ -20,24 +20,21 @@ The purpose of this Shiny Dashboard is to create an updated and interactive vers
 This Shiny Dashboard is programmed using `R` version 3.2.2 and RStudio version 0.99.489. Four packages, besides the base packages included in R, are used for dashboard setup and for statistical calculations.
 
 ## 1.2 Packages
-### 1.2.1 `shiny`
-[shiny](https://cran.r-project.org/web/packages/shiny/shiny.pdf)  
+### 1.2.1 [shiny](https://cran.r-project.org/web/packages/shiny/shiny.pdf) 
 The `shiny` package in R "Makes it incredibly easy to build interactive web applications with R."_CITATION (URL above)_ It uses R functions to create HTML code for a web page. There are various different input, display, and settings options that can be customized all within the same shiny application.
 
-### 1.2.2 `shinydashboard`
-[link](https://cran.r-project.org/web/packages/shinydashboard/shinydashboard.pdf)  
+### 1.2.2 [shinydashboard](https://cran.r-project.org/web/packages/shinydashboard/shinydashboard.pdf)  
 The `shinydashboard` package expands beyond the `shiny` package to add themes to the dashboard for a more attractive look.
 
-### 1.2.3 `pwr`
-[link](https://cran.rstudio.com/web/packages/pwr/pwr.pdf)  
+### 1.2.3 [pwr](https://cran.rstudio.com/web/packages/pwr/pwr.pdf)  
 The `pwr` package calculates power and sample sizes for various different situations using Cohen _1980_ as a basis for the calculations. In this dashboard, the `pwr` package is used for the calculations of the One Sample Mean, One Sample Proportion, Two Sample Means, and Two Sample Proportions tabs.
 
-### 1.2.4 `gsDesign`
-[link](https://cran.r-project.org/web/packages/gsDesign/gsDesign.pdf)  
+### 1.2.4 [gsDesign](https://cran.r-project.org/web/packages/gsDesign/gsDesign.pdf)  
 The `gsDesign` package is used for power and sample size calculations of time to event studies. Specifically, it incorporates factors targeting the time component that is common these types of studies.
 
 # 2. Using the Application
-The setup of each of the tabs is very similar with only the specific inputs being slightly different between each of them. Each tab has a drop down selector with either two or three options of what to solve for.
+The first thing to choose is which tab to use with each representing a different situation. After the tab selection, the selection of what to solve for is the next step. All of the tabs have a `selectizeInput` located at the top of the dashboard page.
+
 ```{r, echo=FALSE}
 selectizeInput(inputId = "solvefor_OM",
                label = p("Solve For"),
@@ -47,13 +44,18 @@ selectizeInput(inputId = "solvefor_OM",
                options = NULL,
                width = "100%")
 ```
-The `selectizeInput` above is from the One Sample Mean tab and shows that Sample Size, Power, and Precision can be calculated. The dashboard changes layouts and widgets depending on the tab and what is being solved for. One Sample Mean, One Sample Proportion, Two Sample Means, and Two Sample Proportions are all set up with study information on the left-hand panel and calculation information as well as the calculation itslef on the right-hand panel. For all of the tabs, the variable that is being calculated is outlined in green.
 
+The `selectizeInput` above is used for both the One Sample Mean and One Sample Proportion tabs and shows that Sample Size, Power, and Precision can be calculated. The rest of the dashboard page will then update based on what is being solved for.
 
-Each numeric variable has both a text box and a slider that can be manipulated. If one is manipulated, the other will update to the new value and the desired output will then be calculated based on the new parameter values. Although the output variable text box and slider can be manipulated, it will not cause any new calculations to be performed.
+The setup of each of the tabs is very similar with only the specific inputs being slightly different. The One Sample Mean, One Sample Proportion, Two Sample Means, and Two Sample Proportions tabs are all set up with study information on the left-hand panel and calculation information as well as the calculation itslef on the right-hand panel. The Time to Event tab is slightly different in that the study information in on the left-hand panel, population information in on the middle panel, and the calculation information and the calculation itself on the right-hand panel. For all of the tabs, the calulation is outlined in green as seen below.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/Output.png)
+
+Within the tabs, there are text, slider, and selector inputs. Each numeric variable has both a text box and a slider that can be manipulated. Updating either of them will have the same effect and will automatically be updated once the other is manipulated. The calculations will be performed immediately after an input is manipulated. It should be noted that although the calculated variable text box and slider can be manipulated, it will not cause any new calculations to be performed.
 
 
 # 3. Application Tabs
+
 ## 3.1 One Sample Mean
 ### 3.1.1 Parameters
 
@@ -72,9 +74,48 @@ The power, sample size, precision, and confidence interval are all parameters th
 ### 3.1.3 Statistical Explanation
 
 ### 3.1.4 Example
-This tab is used in the scenario when there is a one arm treatment that is being tested against a known number. Specifically in this case, the affected measurement is continuous and is summarized with a mean. An example of solving for the needed sample size in this scenario is if a comparison of heart rates is being examined for patients at rest versus those after walking for 5 minutes. Heart rate is a measurement that can be summarized using the mean. Say it is known that the average resting heart rate of a typical patient is 70 beats per minute, while the average heart rate after walking is not known. In this case, the true mean would be 70 and the significance level can be 0.05 and the power can be 0.8, which are both very common levels. The experimental mean and standard deviation of the population should both either be reasonable estimates or obtained from previous or pilot studies.
+An independent one-sample t-test is used to test whether the average of a sample differ significantly from a population mean
 
-![](https://upload.wikimedia.org/wikipedia/en/3/30/Path_example.JPG)
+__Solving for Sample Size:__ A study is being performed to examine the heart rates of people after having walked for 5 minutes. Heart rate is a measurement that can be summarized using the mean. Say it is known that the average resting heart rate is 70 beats per minute. The goal of the study is to determine if the heart rate of people having walked for 5 minutes is different than an average resting heart rate. The researches performed a pilot study and have data about the mean and standard deviation of the heart rate, say 72 and 5 respectively. They decide that they want there study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine people walking for 5 minutes have a different heart rate than the resting heart rate of an average person.
+
+The researches would use the following values to determine what they need:
+
+* Mean = 72
+* True Mean = 70
+* Standard Deviation = 5
+* Significance Level = 0.05
+* Power = 0.8
+
+With the values put in by the researchers, they would find that a sample of 51 people would be required.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM Sample Size.png)
+
+__Solving for Power:__ Instead of determining how large of a sample the researches would need before they performed the study, they decided to just collect the data now and determine later how much power they would have later. They were able to record heart rates after walking 5 minutes for 25 people and found a mean of 72 and a standard deviation of 5. They still require a significance level of 0.05. The researchers want to know how much power their study has.
+
+The researchers would use the following values to determine what they need:
+
+* Mean = 72
+* True Mean = 70
+* Standard Deviation = 5
+* Significance Level = 0.05
+* Sample Size = 25
+
+With the values put in by the researches, they would find that their study has 48% power.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM Power.png)
+
+__Solving for Precision:__ The researchers are now trying to report their findings from the study and would like a present a 95% confidence interval for the mean heart rate after walking for 5 minutes. The researches want to know how precise their measure is.
+
+The researchers would use the following values to determine what they need:
+
+* Mean = 72
+* Standard Deviation = 5
+* Significance Level = 0.05
+* Sample Size = 25
+
+With the values put in by the researches, they would find that their measure has a precision of 1.96 resulting in a 95% confidence interval of 70.04 to 73.96.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM Precision.png)
 
 ## 3.2 One Sample Proportion
 ### 3.2.1 Parameters
