@@ -5,7 +5,7 @@
 
 
 ############################## Libraries ##############################
-library(shiny); library(shinydashboard); library(pwr); library(gsDesign)
+library(shiny); library(shinydashboard); library(pwr); library(gsDesign); library(knitr)
 ############################## Libraries ##############################
 
 server = function(input, output, clientData, session){
@@ -754,6 +754,4 @@ server = function(input, output, clientData, session){
     }
   })
   ############################## Time to Event ##############################
-  
-  
 } # Server Function

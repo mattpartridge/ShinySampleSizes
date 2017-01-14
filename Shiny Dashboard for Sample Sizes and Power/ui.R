@@ -3,9 +3,12 @@
 # University of Minnesota
 # Advisor: Julian Wolfson
 
+# Target/Sampled Population
+# Reference Population
+
 
 ############################## Libraries ##############################
-library(shiny); library(shinydashboard); library(pwr); library(gsDesign)
+library(shiny); library(shinydashboard); library(pwr); library(gsDesign); library(knitr)
 ############################## Libraries ##############################
 
 ui = dashboardPage(
