@@ -47,7 +47,7 @@ selectizeInput(inputId = "solvefor_OM",
 
 The `selectizeInput` above is used for both the One Sample Mean and One Sample Proportion tabs and shows that Sample Size, Power, and Precision can be calculated. The rest of the dashboard page will then update based on what is being solved for.
 
-The setup of each of the tabs is very similar with only the specific inputs being slightly different. The One Sample Mean, One Sample Proportion, Two Sample Means, and Two Sample Proportions tabs are all set up with study information on the left-hand panel and calculation information as well as the calculation itslef on the right-hand panel. The Time to Event tab is slightly different in that the study information in on the left-hand panel, population information in on the middle panel, and the calculation information and the calculation itself on the right-hand panel. For all of the tabs, the calulation is outlined in green as seen below.
+The setup of each of the tabs is very similar with only the specific inputs being slightly different. The One Sample Mean, One Sample Proportion, Two Sample Means, and Two Sample Proportions tabs are all set up with study information on the left-hand panel and calculation information as well as the calculation itself on the right-hand panel. The Time to Event tab is slightly different in that the study information in on the left-hand panel, population information in on the middle panel, and the calculation information and the calculation itself on the right-hand panel. For all of the tabs, the calculation is outlined in green as seen below.
 
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/Output.png)
 
@@ -56,6 +56,8 @@ Within the tabs, there are text, slider, and selector inputs. Each numeric varia
 
 # 3. Application Tabs
 
+
+<!--------------- One Sample Mean --------------->
 ## 3.1 One Sample Mean
 ### 3.1.1 Parameters
 
@@ -69,14 +71,12 @@ Within the tabs, there are text, slider, and selector inputs. Each numeric varia
 * Confidence Interval - The interval in which the mean is likely to fall within
 
 ### 3.1.2 Use of Parameters
-The power, sample size, precision, and confidence interval are all parameters that can be calculated, while the power and sample size are also parameters that can be used as inputs parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size, power, and precision.
+Sample size, power, precision, and confidence interval are all parameters that can be calculated, while sample size and power are parameters that can be used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size, power, or precision.
 
 ### 3.1.3 Statistical Explanation
 
 ### 3.1.4 Example
-An independent one-sample t-test is used to test whether the average of a sample differ significantly from a population mean
-
-__Solving for Sample Size:__ A study is being performed to examine the heart rates of people after having walked for 5 minutes. Heart rate is a measurement that can be summarized using the mean. Say it is known that the average resting heart rate is 70 beats per minute. The goal of the study is to determine if the heart rate of people having walked for 5 minutes is different than an average resting heart rate. The researches performed a pilot study and have data about the mean and standard deviation of the heart rate, say 72 and 5 respectively. They decide that they want there study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine people walking for 5 minutes have a different heart rate than the resting heart rate of an average person.
+__Solving for Sample Size:__ A study is being performed to examine the heart rates of people after having walked for 5 minutes. Heart rate is a measurement that can be summarized using the mean. Say it is known that the average resting heart rate is 70 beats per minute. The goal of the study is to determine if the heart rate of people having walked for 5 minutes is different than an average resting heart rate. The researches performed a pilot study and have data about the mean and standard deviation of the heart rate, say 72 and 5 respectively. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine people walking for 5 minutes have a different heart rate than the resting heart rate of an average person.
 
 The researches would use the following values to determine what they need:
 
@@ -88,7 +88,7 @@ The researches would use the following values to determine what they need:
 
 With the values put in by the researchers, they would find that a sample of 51 people would be required.
 
-![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM Sample Size.png)
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM%20Sample%20Size.png)
 
 __Solving for Power:__ Instead of determining how large of a sample the researches would need before they performed the study, they decided to just collect the data now and determine later how much power they would have later. They were able to record heart rates after walking 5 minutes for 25 people and found a mean of 72 and a standard deviation of 5. They still require a significance level of 0.05. The researchers want to know how much power their study has.
 
@@ -102,9 +102,9 @@ The researchers would use the following values to determine what they need:
 
 With the values put in by the researches, they would find that their study has 48% power.
 
-![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM Power.png)
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM%20Power.png)
 
-__Solving for Precision:__ The researchers are now trying to report their findings from the study and would like a present a 95% confidence interval for the mean heart rate after walking for 5 minutes. The researches want to know how precise their measure is.
+__Solving for Precision:__ The researchers are now trying to report their findings from the study and would like to present a 95% confidence interval for the mean heart rate after walking for 5 minutes. The researches want to know how precise their measure is.
 
 The researchers would use the following values to determine what they need:
 
@@ -115,8 +115,10 @@ The researchers would use the following values to determine what they need:
 
 With the values put in by the researches, they would find that their measure has a precision of 1.96 resulting in a 95% confidence interval of 70.04 to 73.96.
 
-![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM Precision.png)
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM%20Precision.png)
 
+
+<!--------------- One Sample Proportion --------------->
 ## 3.2 One Sample Proportion
 ### 3.2.1 Parameters
 
@@ -129,11 +131,51 @@ With the values put in by the researches, they would find that their measure has
 * Confidence Interval - The interval in which the mean is likely to fall within
 
 ### 3.2.2 Use of Parameters
+Sample size, power, precision, and confidence interval are all parameters that can be calculated, while sample size and power are parameters that can be used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size, power, or precision.
 
 ### 3.2.3 Statistical Explanation
 
 ### 3.2.4 Example
+__Solving for Sample Size:__ A study is being performed to examine the effect of a new drug on treating headaches. Previous research has shown that the drug that is considered industry standard eases headaches in 60% of people. The goal of this study is to compare this new drug's effect on easing headaches to the industry standard. The researches have reason to believe that their new drug helps to ease headaches in 70% of people. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine the proportion affected by their new drug is different than the proportion of people affected by the industry standard.
 
+The researches would use the following values to determine what they need:
+
+* Proportion: 0.7
+* True Proportion: 0.6
+* Significance Level = 0.05
+* Power = 0.8
+
+With the values put in by the researchers, they would find that a sample of 178 people would be required.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OP%20Sample%20Size.png)
+
+__Solving for Power:__ Instead of determining how large of a sample the researches would need before they performed the study, they decided to just collect the data now and determine later how much power they would have later. They were able to collect data for 100 people and found that 70% of them had their headaches eased. They still require a significance level of 0.05. The researches want to know how much power their study has.
+
+The researchers would use the following values to determine what they need:
+
+* Proportion = 0.7
+* True Proportion = 0.6
+* Significance Level = 0.05
+* Sample Size = 100
+
+With the values put in by the researches, they would find that their study has 56% power.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OP%20Power.png)
+
+__Solving for Precision:__ The researchers are now trying to report their findings from the study and would like to present a 95% confidence interval for the proportion of people affected by their new drug. The researches want to know how precise their measure is.
+
+The researchers would use the following values to determine what they need:
+
+* Proportion = 0.7
+* Significance Level = 0.05
+* Sample Size = 100
+
+With the values put in by the researches, they would find that their measure has a precision of 1.96 resulting in a 95% confidence interval of 70.04 to 73.96.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OP%20Precision.png)
+
+
+<!--------------- Two Sample Means --------------->
 ## 3.3 Two Sample Means
 ### 3.3.1 Parameters
 
@@ -146,11 +188,14 @@ With the values put in by the researches, they would find that their measure has
 * Power - The probability of correctly rejecting a false null hypothesis
 
 ### 3.3.2 Use of Parameters
+Sample size and power are both parameters that can be calculated or used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size or power.
 
 ### 3.3.3 Statistical Explanation
 
 ### 3.3.4 Example
 
+
+<!--------------- Two Sample Proportions --------------->
 ## 3.4 Two Sample Proportions
 ### 3.4.1 Parameters
 
@@ -162,11 +207,14 @@ With the values put in by the researches, they would find that their measure has
 * Power - The probability of correctly rejecting a false null hypothesis
 
 ### 3.4.2 Use of Parameters
+Sample size and power are both parameters that can be calculated or used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size or power.
 
 ### 3.4.3 Statistical Explanation
 
 ### 3.4.4 Example
 
+
+<!--------------- Time to Event --------------->
 ## 3.5 Time to Event
 ### 3.5.1 Parameters
 
@@ -185,6 +233,7 @@ With the values put in by the researches, they would find that their measure has
 * Power - The probability of correctly rejecting a false null hypothesis
 
 ### 3.5.2 Use of Parameters
+Sample size and power are both parameters that can be calculated or used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size or power. Distribution of enrollment becomes visible if either "All at Once" or "Continuous Throughout" are selected for the enrollment schedule. Rate becomes visible if distribution of enrollment is visible and if "Exponential" has been selected. Enrollment duration disappears when "Continuous Throughout" is selected for the distribution of enrollment. The censor rates inputs should be set to 0 if the observed event rate is used for the event rate inputs. When a censor rate is greater than 0, it will change the inputted event rate to reflect what rate the events will actually be observed based on the censor rate.
 
 ### 3.5.3 Statistical Explanation
 
