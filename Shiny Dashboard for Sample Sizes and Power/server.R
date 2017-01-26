@@ -4,6 +4,12 @@
 # Advisor: Julian Wolfson
 
 
+###### Notes ######
+# One of the significance levels doesnt mover from 0.05
+# Sample sizes for 1:1 in TTE shouldnt be odd
+
+
+
 ############################## Libraries ##############################
 library(shiny); library(shinydashboard); library(pwr); library(gsDesign); library(knitr)
 ############################## Libraries ##############################
@@ -348,14 +354,20 @@ server = function(input, output, clientData, session){
         sliderInput(inputId = "N1_S_TM", label = "", min = 0, max = 10000, value = 100, step = 1, round = FALSE, width = NULL),
         numericInput(inputId = "mu2_N_TM", label = p("Mean Two: ", em("The mean of population two")), value = 1.0, min = NA, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "mu2_S_TM", label = "", min = -10, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL),
+        if(input$solvefor_TM == "Sample Size"){
+          list(
+            numericInput(inputId = "sd_N_TM", label = p("Standard Deviation: ", em("The standard deviation of the entire population")), value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+            sliderInput(inputId = "sd_S_TM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL))},
         if(input$solvefor_TM == "Power"){
           list(
             numericInput(inputId = "N2_N_TM", label = p("Sample Size Two: ", em("The sample size of population two")), value = 695, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N2_S_TM", label = "", min = 0, max = 10000, value = 695, step = 1, round = FALSE, width = NULL))}),
       # Outputs
       box(
-        numericInput(inputId = "sd_N_TM", label = p("Standard Deviation: ", em("The standard deviation of the entire population")), value = 1, min = 0, max = NA, step = 0.01, width = NULL),
-        sliderInput(inputId = "sd_S_TM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL),
+        if(input$solvefor_TM == "Power"){
+          list(
+            numericInput(inputId = "sd_N_TM", label = p("Standard Deviation: ", em("The standard deviation of the entire population")), value = 1, min = 0, max = NA, step = 0.01, width = NULL),
+            sliderInput(inputId = "sd_S_TM", label = "", min = 0, max = 5, value = 1, step = 0.01, round = FALSE, width = NULL))},
         numericInput(inputId = "alpha_N_TM", label = p("Significance Level: ", em("Probability of rejecting a true null hypothesis")), value = 0.05, min = 0, max = 1, step = 0.01, width = NULL),
         sliderInput(inputId = "alpha_S_TM", label = "", min = 0, max = 1, value = 0.05, step = 0.01, round = FALSE, width = NULL),
         if(input$solvefor_TM == "Sample Size"){

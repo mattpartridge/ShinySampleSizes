@@ -167,7 +167,7 @@ ui = dashboardPage(
                                                    width = NULL)),
                       numericInput(inputId = "ratio_N_TTE",
                                    # Should confirm this is correct and not one to two
-                                   label = p("Sample Allocation Ratio: ", em("Ratio of population two to population one")),
+                                   label = p("Sample Allocation Ratio: ", em("Ratio of the Targeted population to the Reference population")),
                                    value = 1,
                                    min = 0,
                                    max = NA,

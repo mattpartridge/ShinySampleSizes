@@ -75,8 +75,9 @@ Sample size, power, precision, and confidence interval are all parameters that c
 
 ### 3.1.3 Statistical Explanation
 
+
 ### 3.1.4 Example
-__Solving for Sample Size:__ A study is being performed to examine the heart rates of people after having walked for 5 minutes. Heart rate is a measurement that can be summarized using the mean. Say it is known that the average resting heart rate is 70 beats per minute. The goal of the study is to determine if the heart rate of people having walked for 5 minutes is different than an average resting heart rate. The researches performed a pilot study and have data about the mean and standard deviation of the heart rate, say 72 and 5 respectively. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine people walking for 5 minutes have a different heart rate than the resting heart rate of an average person.
+__Solving for Sample Size:__ A study is being performed to examine the heart rates of people after having walked for 5 minutes. Heart rate is a measurement that can be summarized using the mean. Say it is known that the average resting heart rate is 70 beats per minute. The goal of the study is to determine if the heart rate of participants having walked for 5 minutes is different than an average resting heart rate. The researches performed a pilot study and have data about the mean and standard deviation of the heart rate, say 72 and 5 respectively. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine participants walking for 5 minutes have a different heart rate than the resting heart rate of an average person.
 
 The researches would use the following values to determine what they need:
 
@@ -86,11 +87,11 @@ The researches would use the following values to determine what they need:
 * Significance Level = 0.05
 * Power = 0.8
 
-With the values put in by the researchers, they would find that a sample of 51 people would be required.
+With the values put in by the researchers, they would find that a sample of 51 participants would be required.
 
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OM%20Sample%20Size.png)
 
-__Solving for Power:__ Instead of determining how large of a sample the researches would need before they performed the study, they decided to just collect the data now and determine later how much power they would have later. They were able to record heart rates after walking 5 minutes for 25 people and found a mean of 72 and a standard deviation of 5. They still require a significance level of 0.05. The researchers want to know how much power their study has.
+__Solving for Power:__ Instead of determining how large of a sample the researches would need before they performed the study, they decided to just collect the data now and determine later how much power they would have later. They were able to record heart rates after walking 5 minutes for 25 participants and found a mean of 72 and a standard deviation of 5. They still require a significance level of 0.05. The researchers want to know how much power their study has.
 
 The researchers would use the following values to determine what they need:
 
@@ -135,8 +136,9 @@ Sample size, power, precision, and confidence interval are all parameters that c
 
 ### 3.2.3 Statistical Explanation
 
+
 ### 3.2.4 Example
-__Solving for Sample Size:__ A study is being performed to examine the effect of a new drug on treating headaches. Previous research has shown that the drug that is considered industry standard eases headaches in 60% of people. The goal of this study is to compare this new drug's effect on easing headaches to the industry standard. The researches have reason to believe that their new drug helps to ease headaches in 70% of people. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine the proportion affected by their new drug is different than the proportion of people affected by the industry standard.
+__Solving for Sample Size:__ A study is being performed to examine the effect of a new drug on treating headaches. Previous research has shown that the drug that is considered industry standard eases headaches in 60% of people. The goal of this study is to compare this new drug's effect on easing headaches to the industry standard. The researches have reason to believe that their new drug helps to ease headaches in 70% of people. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine the proportion affected by their new drug is different than the proportion of participants affected by the industry standard.
 
 The researches would use the following values to determine what they need:
 
@@ -145,11 +147,11 @@ The researches would use the following values to determine what they need:
 * Significance Level = 0.05
 * Power = 0.8
 
-With the values put in by the researchers, they would find that a sample of 178 people would be required.
+With the values put in by the researchers, they would find that a sample of 178 participants would be required.
 
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OP%20Sample%20Size.png)
 
-__Solving for Power:__ Instead of determining how large of a sample the researches would need before they performed the study, they decided to just collect the data now and determine later how much power they would have later. They were able to collect data for 100 people and found that 70% of them had their headaches eased. They still require a significance level of 0.05. The researches want to know how much power their study has.
+__Solving for Power:__ Instead of determining how large of a sample the researches would need before they performed the study, they decided to just collect the data now and determine later how much power they would have later. They were able to collect data for 100 participants and found that 70% of them had their headaches eased. They still require a significance level of 0.05. The researches want to know how much power their study has.
 
 The researchers would use the following values to determine what they need:
 
@@ -162,7 +164,7 @@ With the values put in by the researches, they would find that their study has 5
 
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/OP%20Power.png)
 
-__Solving for Precision:__ The researchers are now trying to report their findings from the study and would like to present a 95% confidence interval for the proportion of people affected by their new drug. The researches want to know how precise their measure is.
+__Solving for Precision:__ The researchers are now trying to report their findings from the study and would like to present a 95% confidence interval for the proportion of participants affected by their new drug. The researches want to know how precise their measure is.
 
 The researchers would use the following values to determine what they need:
 
@@ -193,6 +195,35 @@ Sample size and power are both parameters that can be calculated or used as inpu
 ### 3.3.3 Statistical Explanation
 
 ### 3.3.4 Example
+__Solving for Sample Size:__ A study is being performed to examine the resting hear rates of both men and women. The researchers were able to recruit 30 men to particpate in the study and now need to determine how many women are needed to recuit in order to have sufficient power. They decide that they want their study to be based on a significance level of 0.05 with 80% power. They performed a pilot study that found the average male resting heart rate was 70 while the average female heart rate was 75. The standard deviation for the resting heart rate was found to be 7. The researches want to know how large of a sample of women is needed to be able to determine if there is a difference between the two genders.
+
+The researches would use the following values to determine what they need:
+
+* Mean One = 70
+* Sample Size One = 30
+* Mean Two = 75
+* Standard Deviation = 7
+* Significance Level = 0.05
+* Power = 0.8
+
+With the values put in by the researchers, they would find that a sample of 34 women would be required.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TM%20Sample%20Size.png)
+
+__Solving for Power:__ The research decided, for ease, to recruit just as many women as they had men. Thus, the study obtained resting heart rate data for 30 men and 30 women. The resting heart rate measurement had a standard deviation of 7. They still require a significance level of 0.05. The researches want to know how much power their study has.
+
+The researchers would use the following values to determine what they need:
+
+* Mean One = 70
+* Sample Size One = 30
+* Mean Two = 75
+* Sample Size Two = 30
+* Standard Deviation = 7
+* Significance Level = 0.05
+
+With the values put in by the researches, they would find that their study has 78% power.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TM%20Power.png)
 
 
 <!--------------- Two Sample Proportions --------------->
@@ -212,14 +243,41 @@ Sample size and power are both parameters that can be calculated or used as inpu
 ### 3.4.3 Statistical Explanation
 
 ### 3.4.4 Example
+__Solving for Sample Size:__ A study is being performed to examine the effect of easing headaches between a new drug and the industry standard drug. The researchers have reason to believe that their new drug helps to ease headaches in 75% of people while the industry standard eases headaches in 50% of people. The researchers have recruited 100 participants to take the industry standard drug and are wondering how many participants they will need to recruit to take their new drug. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researchers want to know how large of a sample they will need to determine the proportion affected by their new drug is different than the proportion of participants affected by the industry standard.
+
+The researches would use the following values to determine what they need:
+
+* Proportion One: 0.5
+* Sample Size One: 50
+* Proportion Two: 0.75
+* Significance Level = 0.05
+* Power = 0.8
+
+With the values put in by the researchers, they would find that a sample of 67 participants would be required.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TP%20Sample%20Size.png)
+
+__Solving for Power:__ The research decided, for ease, to recruit the same number of participants to take their drug as those who take the industry standard drug. This means they collected data on 50 participants taking each drug. They found that 50% of participants had their headache ease with the industry standard drug while 75% of participants had their headache ease with their new drug. They still require a significance level of 0.05. The researches want to know how much power their study has.
+
+The researches would use the following values to determine what they need:
+
+* Proportion One: 0.5
+* Sample Size One: 50
+* Proportion Two: 0.75
+* Sample Size Two: 50
+* Significance Level = 0.05
+
+With the values put in by the researches, they would find that their study has 74% power.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TP%20Power.png)
 
 
 <!--------------- Time to Event --------------->
 ## 3.5 Time to Event
 ### 3.5.1 Parameters
 
-* Enrollment Schedule - The time at which subjects are enrolled in the study
-* Distribution of Enrollment - The distribution of how subjects are enrolled
+* Enrollment Schedule - The time at which participants are enrolled in the study
+* Distribution of Enrollment - The distribution of how participants are enrolled
 * Rate - Rate of growth (decay) under the exponential enrollment assumption
 * Study Duration - The duration of the study in units of time
 * Enrollment Duration - The duration of enrollment in units of time
@@ -238,6 +296,54 @@ Sample size and power are both parameters that can be calculated or used as inpu
 ### 3.5.3 Statistical Explanation
 
 ### 3.5.4 Example
+__Solving for Sample Size:__ A study is being performed to examine the effectiveness of a new drug for preventing breast cancer reccurrence. The goal of the study is to compare the inclusion of this new drug with general lifestyle guidlines to just following the lifestyle guidlines. The study is set to be 10 years long in order to allow for the possiblity of relapse with participants being recruited within the first 2 years of the study. It is expected that recruitment will start out relatively quickly, but then slow gradually. The researches will recruit the same number of participants for each of the two groups. Using general lifestyle guidlines, the researchers expect to see 2 reccurrences per year. However, the researches expect that using their new drug will reduce the number of reccurrences to only 1 per year. The researchers have various methods set up for following the participants over the course of the study, but they believe that both groups have 10% chance of one their reccurrence not being observed or found by the researchers. The researchers decide that they still want to have a significance level of 0.05 and a 80% power. The researchers want to know how many participants will need to be recruited with a one-to-one allocation ration between the two groups.
+
+The researches would use the following values to determine what they need:
+
+* Enrollment Schedule: Over a Period
+* Distribution of Enrollment: Exponential
+* Rate: 0.5
+* Study Duration: 10 (years)
+* Enrollment: 2 (years)
+* Sample Allocation Ratio: 1
+* Targeted Event Rate: 1 (recurrence per year)
+* Targeted Censoring Rate: 0.1
+* Reference Event Rate: 2 (recurrences per year)
+* Reference Censoring Rate: 0.1
+* Significance Level: 0.05
+* Power: 0.8
+
+With the values put in by the researches, they would find that they need to recruit a total of 58 participants, 29 in each arm.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Sample%20Size%20a.png)
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Sample%20Size%20b.png)
+
+__Solving for Power__:  A study was performed where the researchers were examining the effect of a new drug’s ability to help prevent cancer recurrence. The two arms of the study were general lifestyle guidelines with and without the new drug with 200 and 100 participants in each arm respectively. The study lasted 10 years with recruitment having been completed by the beginning of the study. The researchers found that group without the drug experienced recurrences at a rate of 3 per year, while the group taking the new drug experienced recurrences at a rate of 2 per year. It was estimated that both of the populations had a censor rate of 15%. They  want to maintain a 0.05 significance level. The researchers want to know how much power their study had.
+
+The researches would use the following values to determine what they need:
+
+* Enrollment Schedule: All at Once
+* Study Duration: 10 (years)
+* Sample Allocation Ratio: 0.5
+* Reference Event Rate: 3 (recurrences per year)
+* Targeted Event Rate: 2 (recurrences per year)
+* Reference Censor Rate: 0.15
+* Targeted Censor Rate: 0.15
+* Significance Level: 0.05
+* Total Sample Size: 300
+
+With the values put in by the researches, they would find that their study has 94% power.
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Power%20a.png)
+
+![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Power%20b.png)
+
+<!--
+Control 2 Reference
+
+Experimental 2 Targeted
+-->
 
 # 4 References
 
