@@ -5,8 +5,10 @@
 
 
 ###### Notes ######
-# One of the significance levels doesnt mover from 0.05
+# One Mean Precision Significance Level not changing from what the starting value is
 # Sample sizes for 1:1 in TTE shouldnt be odd
+# Control Population --> Reference Population
+# Experimental Population --> Targeted Population
 
 
 
@@ -127,8 +129,8 @@ server = function(input, output, clientData, session){
         updateNumericInput(session, "mu_N_OM", value = input$mu_S_OM)
         updateNumericInput(session, "nullmu_N_OM", value = input$nullmu_S_OM)
         updateNumericInput(session, "sd_N_OM", value = input$sd_S_OM)
-        updateSliderInput(session, "alpha_N_OM", value = input$alpha_S_OM)
-        updateSliderInput(session, "N_N_OM", value = input$N_S_OM)
+        updateNumericInput(session, "alpha_N_OM", value = input$alpha_S_OM)
+        updateNumericInput(session, "N_N_OM", value = input$N_S_OM)
       }
       # Power Calculations
       n = ifelse(is.null(input$N_N_OM), 150, input$N_N_OM)
@@ -170,8 +172,7 @@ server = function(input, output, clientData, session){
       mu = ifelse(is.null(input$mu_N_OM), 0, input$mu_N_OM)
       sd = ifelse(is.null(input$sd_N_OM), 1, input$sd_N_OM)
       n = ifelse(is.null(input$N_N_OM), 150, input$N_N_OM)
-      # alpha = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
-      alpha = 0.05
+      alpha = ifelse(is.null(input$alpha_N_OM), 0.05, input$alpha_N_OM)
       Z.alpha.2 = qnorm(1 - alpha/2)
       se = sd/sqrt(n)
       moe = round(Z.alpha.2*se, digits = 2)
@@ -268,7 +269,7 @@ server = function(input, output, clientData, session){
       power = ifelse(is.null(input$power_N_OP), 0.8, input$power_N_OP)
       alternative = "two.sided"
       tempn = try(round(pwr.p.test(h, n, sig.level, power, alternative)$n, digits = 0), silent = TRUE)
-      n = ifelse(class(tempn) == "try-error", NaN, tempn)
+      n = ifelse(class(tempn) == "try-error", NaN, ifelse(power == 1, NaN, tempn))
       # Output
       updateNumericInput(session, inputId = "N_N_OP", value = n)
       updateSliderInput(session, inputId = "N_S_OP", value = n, max = ifelse(n < 10, 10, round(n + 6*sqrt(n), digits = 0)))
@@ -283,7 +284,7 @@ server = function(input, output, clientData, session){
         updateSliderInput(session, "p_S_OP", value = input$p_N_OP)
         updateSliderInput(session, "nullp_S_OP", value = input$nullp_N_OP)
         updateSliderInput(session, "alpha_S_OP", value = input$alpha_N_OP)
-        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(input$N_N_OM < 10, 10, round(input$N_N_OM + 6*sqrt(input$N_N_OM), digits = 0)))
+        updateSliderInput(session, "N_S_OP", value = input$N_N_OP, max = ifelse(input$N_N_OP < 10, 10, round(input$N_N_OP + 6*sqrt(input$N_N_OP), digits = 0)))
       }
       ### Slider
       if(NorS_OP$NorS == "S"){
@@ -692,7 +693,7 @@ server = function(input, output, clientData, session){
       beta =  1 - ifelse(is.null(input$power_N_TTE), 0.8, input$power_N_TTE)
       sided = 2
       approx = FALSE
-      type = "rr" # Im not sure
+      type = "rr"
       entry = ifelse(is.null(input$enrollmentdist_SE_TTE), "unif", ifelse(input$enrollmentdist_SE_TTE == "Uniform", "unif", "expo"))
       gamma = ifelse(is.null(input$gamma_N_TTE), NA, input$gamma_N_TTE)
       tempN = try(ceiling(nSurvival(lambda1 = lambda1, lambda2 = lambda2, Ts = Tstudy, Tr = Tenrollment, eta = eta, ratio = ratio, alpha = alpha, beta = beta, sided = sided, approx = approx, type = type, entry = entry, gamma = gamma)$n), silent = TRUE)
@@ -748,7 +749,7 @@ server = function(input, output, clientData, session){
       beta =  0.2
       sided = 2
       approx = FALSE
-      type = "rr" # Im not sure
+      type = "rr"
       entry = ifelse(is.null(input$enrollmentdist_SE_TTE) | input$enrollmentdist_SE_TTE == "Uniform", "unif", "expo")
       gamma = ifelse(is.null(input$gamma_N_TTE), NA, input$gamma_N_TTE)
       # Use nSurvival with input$ for all except use power = 0.8

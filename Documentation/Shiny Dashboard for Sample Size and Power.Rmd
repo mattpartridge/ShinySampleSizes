@@ -6,11 +6,9 @@ output:
   html_document:
     toc: true
     toc_float: true
-    toc_depth: 4
+    toc_depth: 2
 runtime: shiny
 ---
-
-# Table of Contents
 
 
 # 1. Introduction
@@ -74,7 +72,37 @@ Within the tabs, there are text, slider, and selector inputs. Each numeric varia
 Sample size, power, precision, and confidence interval are all parameters that can be calculated, while sample size and power are parameters that can be used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size, power, or precision.
 
 ### 3.1.3 Statistical Explanation
+The one sample mean scenario looks to compare a sample mean and standard deviation to a known population mean in a two-sided comparison. The null and alternative hypothesese are $H_{0}: \bar{x} = \mu_{0}$ and $H_{A}: \bar{x} \neq \mu_{0}$ respectively, where $\bar{x}$ is the sample mean, $\mu_{0}$ is the known population mean that the sample mean is being compared to. In order to compare the two means, the Student's $t$-Test can be used:
 
+$$t = \frac{\bar{x} - \mu_{0}}{\frac{s}{\sqrt{N}}}$$
+
+where, $\bar{x}$ and $\mu_{0}$ are defined as above, $s$ is the sample standard deviation, $n$ is the sample size, and $t$ is the t-value from the $t$-distribution with $n-1$ degrees of fredom. The importance of the $t$-test is that it standardizes the raw effect size, $\bar{x} - \mu_{0}$ by dividing by the standard deviation of the population. Cohen (1988) defined this standardization, $\frac{\bar{x} - \mu}{\sigma}$, as the Effect Size Index (ESI). Due to the fact that the sample size, $n$, is unknown for the scenario of solving for the sample size, the $t$-distribution can be estimated using the $Z$-distribution since $t_{n-1} \sim Z$ as n gets larger. Thus, the $Z$-distribution will be used throughout this scenario.
+
+__Power:__ The power of a study is defined as the probability of correctly rejecting the null hypothesis$H_{0}: \bar{x} = \mu_{0}$, when the alternative hypothesis, $H_{A}: \bar{x} \neq \mu_{0}$, is true. This can be expressed as the probability that the $Z$-score, $\frac{\bar{x} - \mu}{\sigma / \sqrt{N}}$, is more extreme than the standard normal value for a given significance level. 
+
+$$\begin{aligned}
+Power &= P(Rejecting H_{0} | H_{1}) \\
+&= P(\bar{x} \geq \mu_{0} + z_{1 - \frac{\alpha}{2}}\frac{\sigma}{\sqrt{N}}) + P(\bar{x} \leq \mu_{0} - z_{1 - \frac{\alpha}{2}}\frac{\sigma}{\sqrt{N}}) \\
+&= P(\frac{\bar{x} - \mu}{\sigma / \sqrt{N}} \geq \frac{\mu_{0} + z_{1 - \alpha / 2}\frac{\sigma}{\sqrt{N}} - \mu}{\sigma / \sqrt{N}}) + P(\frac{\bar{x} - \mu}{\sigma / \sqrt{N}} \leq \frac{\mu_{0} - z_{1 - \alpha / 2}\frac{\sigma}{\sqrt{N}} - \mu}{\sigma / \sqrt{N}}) \\
+&= P(\sqrt{N}ESI \geq \frac{\mu_{0} - \mu}{\sigma / \sqrt{N}} + z_{1 - \frac{\alpha}{2}}) + P(\sqrt{N}ESI \leq \frac{\mu_{0} - \mu}{\sigma / \sqrt{N}} - z_{1 - \frac{\alpha}{2}}) \\
+&= 1 - \phi(\frac{\mu_{0} - \mu}{\sigma / \sqrt{N}} + z_{1 - \frac{\alpha}{2}}) + \phi(\frac{\mu_{0} - \mu}{\sigma / \sqrt{N}} - z_{1 - \frac{\alpha}{2}})
+\end{aligned}$$
+
+Where $\bar{x}$ is the target mean, $\mu_{0}$ is the reference mean, $\mu$ is the true mean of the targeted population, $z$ denotes the Standard Normal quantile function, $\alpha$ is the significance level, $\sigma$ is the standard deviation of the targeted population, $N$ is sample size of the targeted population, and $\phi()$ denotes the Standard Normal distribution function.
+
+__Sample Size:__ The sample size can be defined as the number of observations needed in order for the equation above to equate to a given power. With this idea in mind, the equation can be manipulated to solve for the samle size instead of the power. The sample size can be calculated by solving the following equation for a given power: 
+
+$$\begin{aligned}
+1 - \beta &= \phi(\frac{\mu_{0} - \mu}{\sigma / \sqrt{N}} - z_{1 - \frac{\alpha}{2}}) \\
+z_{1 - \beta} &= \frac{\mu_{0} - \mu}{\sigma / \sqrt{N}} - z_{1 - \frac{\alpha}{2}} \\
+\frac{\mu_{0} - \mu}{\sigma / \sqrt{N}} &= z_{1 - \frac{\alpha}{2}} + z_{1 - \beta} \\
+\sqrt{N} &= \sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{0} - \mu} \\
+N &= \big(\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{0} - \mu})^{2}
+\end{aligned}$$
+
+__Precision:__ The precision of an estimate is typically defined by the width of its confidence interval. A smaller margin of error implies more precision and vice versa. The margin of error is simply $z_{1 - \alpha / 2}\frac{\sigma}{\sqrt{N}}$ and the confidence interval for a value, $\mu$ is $\mu \pm \text{Margin of Error}$. Thus the confidence interval for a value, $\mu$ is
+
+$$(\mu - z_{1 - \alpha / 2}\frac{\sigma}{\sqrt{N}}, \mu + z_{1 - \alpha / 2}\frac{\sigma}{\sqrt{N}})$$
 
 ### 3.1.4 Example
 __Solving for Sample Size:__ A study is being performed to examine the heart rates of people after having walked for 5 minutes. Heart rate is a measurement that can be summarized using the mean. Say it is known that the average resting heart rate is 70 beats per minute. The goal of the study is to determine if the heart rate of participants having walked for 5 minutes is different than an average resting heart rate. The researches performed a pilot study and have data about the mean and standard deviation of the heart rate, say 72 and 5 respectively. They decide that they want their study to be based on a significance level of 0.05 with 80% power. The researches want to know how large of a sample they will need to determine participants walking for 5 minutes have a different heart rate than the resting heart rate of an average person.
@@ -193,6 +221,40 @@ With the values put in by the researches, they would find that their measure has
 Sample size and power are both parameters that can be calculated or used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size or power.
 
 ### 3.3.3 Statistical Explanation
+The two sample mean scenario looks to compare a mean from one sample to an expected mean from another sample that are both part of a larger population in a two-sided comparison. It is assumed in this scenario that the variances between the two samples are equal. The null and alternative hypotheses are $H_{0}: \bar{x}_{1} = \mu_{2}$ and $H_{A}: \bar{x}_{1} \neq \mu_{2}$ respectively, where $\bar{x}_{1}$ is the mean from sample one, $\mu_{2}$ is the expected mean from sample two. In order to copmare the two means, the Student's $t$-Test can be used:
+
+$$t = \frac{\bar{x}_{1} - \mu_{2}}{\frac{s}{\sqrt{n'}}}$$
+
+where $\bar{x}_{1}$ is the sample mean from population 1, $\mu_{2}$ is the mean of population 2, $s$ is the sample standard deviation, since there are two samples in this scenario, $n'$ represents the harmonic mean of the two sample size as defined by Cohen (1988) ($\frac{2n_{1}n_{2}}{n_{1} + n_{2}}$), and $t$ is the $t$-value from the $t$-distribution with $n'-1$ degrees of fredom. The importance of the $t$-test is that it standardizes the raw effect size between the means by dividing by the standard deviation of the population. Cohen (1988) defined this standardization, $\frac{\bar{x} - \mu}{\sigma}$, as the effect size index (ESI). Due to the fact that the sample size, $n'$, is unknown for this situation, the $t$-distribution will be estimated using the $Z$-distribution as $t_{n'-1} \sim Z$ as $n'$ gets larger.
+
+__Power:__ The power of a study is the probability of correctly rejecting the null hypothesis, in this case that $\bar{x}_{1} = \mu_{2}$. Given that the $Z$-distribution is being used to estimate the $t$-distribution, this can be expressed as the probability that the $Z$-score, $\frac{\bar{x} - \mu}{\sigma / \sqrt{N}}$, is more extreme than the standard normal value for a given significance level.
+
+$$\begin{aligned}
+Power &= P(Rejecting H_{0} | H_{1}) \\
+&= P(\bar{x}_{1} \geq \mu_{2} + z_{1 - \frac{\alpha}{2}}\frac{\sigma}{\sqrt{\frac{2N_{1}N_{2}}{N_{1} + N_{2}}}}) + P(\bar{x}_{1} \leq \mu_{2} - z_{1 - \frac{\alpha}{2}}\frac{\sigma}{\sqrt{\frac{2N_{1}N_{2}}{N_{1} + N_{2}}}}) \\
+&= P(\bar{x}_{1} \geq \mu_{2} + z_{1 - \frac{\alpha}{2}}\frac{\sigma}{\sqrt{N'}}) + P(\bar{x}_{1} \leq \mu_{2} - z_{1 - \frac{\alpha}{2}}\frac{\sigma}{\sqrt{N'}}) \\
+&= P(\frac{\bar{x}_{1} - \mu_{1}}{\sigma / \sqrt{N'}} \geq \frac{\mu_{2} + z_{1 - \alpha / 2}\frac{\sigma}{\sqrt{N'}} - \mu_{1}}{\sigma / \sqrt{N'}}) + P(\frac{\bar{x}_{1} - \mu_{1}}{\sigma / \sqrt{N'}} \leq \frac{\mu_{2} - z_{1 - \alpha / 2}\frac{\sigma}{\sqrt{N'}} - \mu_{1}}{\sigma / \sqrt{N'}}) \\
+&= P(\sqrt{N'}ESI \geq \frac{\mu_{2} - \mu}{\sigma / \sqrt{N'}} + z_{1 - \frac{\alpha}{2}}) + P(\sqrt{N'}ESI \leq \frac{\mu_{2} - \mu_{1}}{\sigma / \sqrt{N'}} - z_{1 - \frac{\alpha}{2}}) \\
+&= 1 - \phi(\frac{\mu_{2} - \mu_{1}}{\sigma / \sqrt{N'}} + z_{1 - \frac{\alpha}{2}}) + \phi(\frac{\mu_{2} - \mu_{1}}{\sigma / \sqrt{N'}} - z_{1 - \frac{\alpha}{2}})
+\end{aligned}$$
+
+Where $\bar{x}_{1}$ is the sample mean for population one, $\mu_{2}$ is the mean of population two, $\mu_{1}$ is the true mean of population one, $z$ denotes the Standard Normal quantile function, $\alpha$ is the significance level, $\sigma$ is the standard deviation of the targeted population, $N'$ is the harmonic mean of the sample sizes, and $\phi()$ denotes the Standard Normal distribution function.
+
+__Sample Size:__ The sample size can be defined as the number of observations needed in order for the equation above to equate to a given power. With this idea in mind, the equation can be manipulated to solve for the samle size instead of the power. The sample size can be calculated by solving the following equation for a given power: 
+
+$$\begin{aligned}
+1 - \beta &= \phi(\frac{\mu_{2} - \mu_{1}}{\sigma / \sqrt{N'}} - z_{1 - \frac{\alpha}{2}}) \\
+z_{1 - \beta} &= \frac{\mu_{2} - \mu_{1}}{\sigma / \sqrt{N'}} - z_{1 - \frac{\alpha}{2}} \\
+\frac{\mu_{2} - \mu_{1}}{\sigma / \sqrt{N'}} &= z_{1 - \frac{\alpha}{2}} + z_{1 - \beta} \\
+\sqrt{N'} &= \sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}} \\
+N' &= (\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2} \\
+\frac{2N_{1}N_{2}}{N_{1} + N_{2}} &= (\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2} \\
+2N_{1}N_{2} &= (\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2}(N_{1} + N_{2}) \\
+2N_{1}N_{2} &= N_{1}(\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2} + N_{2}(\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2} \\
+2N_{1}N_{2} - N_{1}(\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2} &= N_{2}(\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2} \\
+N_{1}(2N_{2} - (\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2}) &= N_{2}(\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2} \\
+N_{1} &= \frac{N_{2}(\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2}}{2N_{2} - (\sigma \frac{z_{1 - \frac{\alpha}{2}} + z_{1 - \beta}}{\mu_{2} - \mu_{1}})^{2}}
+\end{aligned}$$
 
 ### 3.3.4 Example
 __Solving for Sample Size:__ A study is being performed to examine the resting hear rates of both men and women. The researchers were able to recruit 30 men to particpate in the study and now need to determine how many women are needed to recuit in order to have sufficient power. They decide that they want their study to be based on a significance level of 0.05 with 80% power. They performed a pilot study that found the average male resting heart rate was 70 while the average female heart rate was 75. The standard deviation for the resting heart rate was found to be 7. The researches want to know how large of a sample of women is needed to be able to determine if there is a difference between the two genders.
@@ -294,6 +356,50 @@ With the values put in by the researches, they would find that their study has 7
 Sample size and power are both parameters that can be calculated or used as input parameters for calculations. All of the other parameters can be changed and manipulated resulting in different values for sample size or power. Distribution of enrollment becomes visible if either "All at Once" or "Continuous Throughout" are selected for the enrollment schedule. Rate becomes visible if distribution of enrollment is visible and if "Exponential" has been selected. Enrollment duration disappears when "Continuous Throughout" is selected for the distribution of enrollment. The censor rates inputs should be set to 0 if the observed event rate is used for the event rate inputs. When a censor rate is greater than 0, it will change the inputted event rate to reflect what rate the events will actually be observed based on the censor rate.
 
 ### 3.5.3 Statistical Explanation
+<!--
+EXPONENTIAL SURVIVAL MODEL
+UNIFORM ENTRY MODEL
+NON-UNIFORM ENTRY MODEL
+
+SAMPLE SIZE IN TERMS OF EVENT RATES
+    ??? SHOULD I TRY TO SHOW WHY THAT IS THE EQUATION FOR SAMPLE SIZE
+-->
+
+__Sample Size__:The time-to-event scenario looks to compare the event rates of two different samples in a two-sided comparison. Specifically, the hazard rates, $\lambda_{1}$ and $\lambda_{2}$, are being compared by examining the risk ratio, $\frac{\lambda_{1}}{\lambda_{2}}$ of the two samples. This comparison can be performed due to the standard assumption that survival curves follows a basic exponential model, INSERT EQUATION HERE, where EXPLANATION OF PARAMETERS. Lachin (1981) found the basic equation relating the sample size with the power when comparing the risk ration ($\frac{\lambda_{c}}{\lambda_{e}}$) to be:
+
+$$\sqrt(N)ln\Big(\frac{\lambda_{c}}{\lambda_{e}}\Big) = Z_{1 - \frac{\alpha}{2}}\sqrt{E(\delta | \bar{\lambda})^{-1}(Q_{e}^{-1} + Q_{c}^{-1})} + Z_{\beta}\sqrt{E(\delta | \lambda_{e})^{-1}Q_{e}^{-1} + E(\delta | \lambda_{c})^{-1}Q_{c}^{-1}}$$ 
+
+This can be solved for the sample size: 
+
+$$N = \Big(\frac{Z_{1 - \frac{\alpha}{2}}\sqrt{E(\delta | \bar{\lambda})^{-1}(Q_{e}^{-1} + Q_{c}^{-1})} + Z_{\beta}\sqrt{E(\delta | \lambda_{e})^{-1}Q_{e}^{-1} + E(\delta | \lambda_{c})^{-1}Q_{c}^{-1}}}{ln(\frac{\lambda_{c}}{\lambda_{e}})}\Big)^{2}$$. 
+
+where $Q_{i} = \frac{n_{i}}{N}$, $\bar{\lambda} = Q_{e}\lambda_{e} + Q_{c}\lambda_{c}$, $E(\delta | \lambda)$, the expected number of events given the event rate is $E(\delta | \lambda) = \frac{\lambda^{2}}{\phi(\lambda)}$, and $\phi()$ is defined by the distribution of entry into the study. It is often the case that studies will have recruitment periods that occur during the time of the study. One basic assumption is to assume that the entrance into the study during the recruitment period will occur uniformly throughout that time. This can be reflected by letting $\phi(\lambda) = \lambda^{2}(1 + \frac{e^{-\lambda(T - R)} - e^{-\lambda T}}{\lambda R})^{-1}$, where $\lambda$ is the event rate, T is the duration of the study, and R is the duration of recruitment. It may also be the case that entry into the study doesn't occur uniformly and instead occurs at an exponential rate, either convex or concave, during that time. In this case, let $\phi(\lambda) = \lambda^{2}(1 + \frac{\gamma e^{-\lambda T(1 - e^{(\lambda - \gamma)R})}}{(1 - e^{-\gamma R})(\lambda - \gamma)})^{-1}$, where $\gamma$ the exponential parameter. Entry will be convex, more entries earlier with less later on, if $\gamma > 0$ and entry will be concave, increasing entries as time goes on, if $\gamma < 0$. Another common assumption made in these types of studies is that all of the possible events that could occur will be observed. That is, there is perfect information of all of the participants in the study. It is very possible that some events may not be able to be recorded or participants may leave the study before the official end of the trial among other possible reasons. These types of scenarios result in censoring of the data as the full information from that participant in the study is not known. Each group can have its own censoring rate, which represents the probability of being censored within each group. Then, the observed event rate ($\lambda_{obs}$) can be estimated by deflating the expected event rate ($\lambda$) using the censoring rate ($\theta$): $\lambda_{obs} = \lambda(\frac{\lambda}{\lambda \theta})$. The observed event rate can then be substituted into the sample size equation for each instance of its corresponding expected event rate.
+
+The final sample size equation is then:
+
+$$N = \Bigg(\frac{Z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\phi(\bar{\lambda)}}{\bar{\lambda}^{2}}(Q_{e}^{-1} + Q_{c}^{-1})} + Z_{\beta}\sqrt{(\frac{\phi(\lambda_{e})}{\lambda_{e}}^{2})Q_{e}^{-1} + (\frac{\phi(\lambda_{c})}{\lambda_{c}^{2}})Q_{c}^{-1}}}{ln(\frac{\lambda_{c}}{\lambda_{e}})}\Bigg)^{2}$$
+
+where $\lambda_{c}$ and $\lambda_{e}$ can be replaced with observed event rates if censoring is present and $\phi(\lambda)$ can changed depending on they type of entry into the study that is expected as outlined above.
+
+
+__Power__: Calculations for the power of the study are slightly more involved than the calculations for sample size due to the way the R package being used is built. Although, calculations for sample size and power can be performed in terms of both the event rates or the number of expected events, the `gsDesign` package can only calculate power in terms of the number of events. Thus, conversions from the event rates to the number of expected events are performed and then the power is calculated. The first step is to calculate the required sample size in terms of the event rates, as shown above in the sample size calculations, using any power. JUSTIFICATION FOR WHY POWER HAS NO EFFECT ON THE EVENTSPERPERSON. Then, the expected number of events using the same parameters can be calculated by solving the sample size equation for the expected number of events:
+
+ALGEBRA FOR EXPECTED NUMBER OF DEATHS USING ALL OF THE GIVEN PARAMETERS AND THE CALCULATED SAMPLE SIZE
+
+Now that both the sample size required and the expected number of events have been calculated, the number of events per person can be calculated $\text{Events per Person} = \frac{\text{Number of Events}}{\text{Sample Size}}$ and then multiplied by the specified sample size to get the expected number of events for the population defined. Now, the power can be calculated in terms of the expected number of events. 
+
+ALGEBRA FOR POWER BASED ON THE EXPECTED NUMBER OF EVENTS FROM SCHOENFELD
+
+
+$$\text{Expected Number of Events} = \frac{(z_{1 - \alpha} + z_{\beta})^{2}}{P_{1}P_{2}ln^{2}\delta}$$
+
+where $\alpha$ is the significance level, $1 - \beta$ is the power, $P_{1}$ is the fraction of sample size one to the total sample size ($\frac{n_{1}}{N}), $P_{2}$ is the fraction of sample size two to the total sample size ($\frac{n_{2}}{N}), and $\delta$ is the treatment effect. The expected number of deaths can also be defined as the total sample size multiplied by the proportion of people that are expected to die. Thus, the total sample size required can be defined as the expected number of events divided by the proportion of subjects who will have an event. Schoenfeld defined the proportion of subjects who will have an event as:
+
+$$d = P_{1}d_{1} + P_{2}d_{2}$$
+
+where $P_{i} = \frac{n_{i}}{N}$ and $d_{i} =$ proportion within each group that are expected to have an event.
+
+Then, the number of people required in the study can be determined by dividing the expected number of events by the
 
 ### 3.5.4 Example
 __Solving for Sample Size:__ A study is being performed to examine the effectiveness of a new drug for preventing breast cancer reccurrence. The goal of the study is to compare the inclusion of this new drug with general lifestyle guidlines to just following the lifestyle guidlines. The study is set to be 10 years long in order to allow for the possiblity of relapse with participants being recruited within the first 2 years of the study. It is expected that recruitment will start out relatively quickly, but then slow gradually. The researches will recruit the same number of participants for each of the two groups. Using general lifestyle guidlines, the researchers expect to see 2 reccurrences per year. However, the researches expect that using their new drug will reduce the number of reccurrences to only 1 per year. The researchers have various methods set up for following the participants over the course of the study, but they believe that both groups have 10% chance of one their reccurrence not being observed or found by the researchers. The researchers decide that they still want to have a significance level of 0.05 and a 80% power. The researchers want to know how many participants will need to be recruited with a one-to-one allocation ration between the two groups.
@@ -316,7 +422,6 @@ The researches would use the following values to determine what they need:
 With the values put in by the researches, they would find that they need to recruit a total of 58 participants, 29 in each arm.
 
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Sample%20Size%20a.png)
-
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Sample%20Size%20b.png)
 
 __Solving for Power__:  A study was performed where the researchers were examining the effect of a new drug’s ability to help prevent cancer recurrence. The two arms of the study were general lifestyle guidelines with and without the new drug with 200 and 100 participants in each arm respectively. The study lasted 10 years with recruitment having been completed by the beginning of the study. The researchers found that group without the drug experienced recurrences at a rate of 3 per year, while the group taking the new drug experienced recurrences at a rate of 2 per year. It was estimated that both of the populations had a censor rate of 15%. They  want to maintain a 0.05 significance level. The researchers want to know how much power their study had.
@@ -336,7 +441,6 @@ The researches would use the following values to determine what they need:
 With the values put in by the researches, they would find that their study has 94% power.
 
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Power%20a.png)
-
 ![](https://raw.githubusercontent.com/mattpartridge/ShinySampleSizes/master/Documentation/Screen%20Shots/TTE%20Power%20b.png)
 
 <!--
@@ -345,7 +449,9 @@ Control 2 Reference
 Experimental 2 Targeted
 -->
 
-# 4 References
+# 4. Further Improvements
+
+# 5. References
 
 
 
