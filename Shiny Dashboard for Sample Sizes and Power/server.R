@@ -5,11 +5,22 @@
 
 
 ###### Notes ######
+
+### UI/Server
 # One Mean Precision Significance Level not changing from what the starting value is
 # Sample sizes for 1:1 in TTE shouldnt be odd
 # Control Population --> Reference Population
 # Experimental Population --> Targeted Population
+# Should the default comparison be one-sided or is two-sided fine
+# Are there any other things that I should add?
 
+### Documentation
+# Deriving power for both proportion tabs
+# Deriving power for TTE tab. I have something but I dont know if it is right.
+# Control Population --> Reference Population
+# Experimental Population --> Targeted Population
+# Should the default comparison be one-sided or is two-sided fine
+# Make sure what I have is actually right
 
 
 ############################## Libraries ##############################

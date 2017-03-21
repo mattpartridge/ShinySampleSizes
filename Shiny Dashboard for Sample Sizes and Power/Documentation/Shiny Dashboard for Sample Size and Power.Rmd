@@ -377,29 +377,50 @@ where $Q_{i} = \frac{n_{i}}{N}$, $\bar{\lambda} = Q_{e}\lambda_{e} + Q_{c}\lambd
 
 The final sample size equation is then:
 
-$$N = \Bigg(\frac{Z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\phi(\bar{\lambda)}}{\bar{\lambda}^{2}}(Q_{e}^{-1} + Q_{c}^{-1})} + Z_{\beta}\sqrt{(\frac{\phi(\lambda_{e})}{\lambda_{e}}^{2})Q_{e}^{-1} + (\frac{\phi(\lambda_{c})}{\lambda_{c}^{2}})Q_{c}^{-1}}}{ln(\frac{\lambda_{c}}{\lambda_{e}})}\Bigg)^{2}$$
+$$N = \Bigg(\frac{Z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\phi(\bar{\lambda)}}{\bar{\lambda}^{2}}(Q_{e}^{-1} + Q_{c}^{-1})} + Z_{\beta}\sqrt{\frac{\phi(\lambda_{e})}{\lambda_{e}}Q_{e}^{-1} + \frac{\phi(\lambda_{c})}{\lambda_{c}^{2}}Q_{c}^{-1}}}{ln(\frac{\lambda_{c}}{\lambda_{e}})}\Bigg)^{2}$$
 
 where $\lambda_{c}$ and $\lambda_{e}$ can be replaced with observed event rates if censoring is present and $\phi(\lambda)$ can changed depending on they type of entry into the study that is expected as outlined above.
 
 
-__Power__: Calculations for the power of the study are slightly more involved than the calculations for sample size due to the way the R package being used is built. Although, calculations for sample size and power can be performed in terms of both the event rates or the number of expected events, the `gsDesign` package can only calculate power in terms of the number of events. Thus, conversions from the event rates to the number of expected events are performed and then the power is calculated. The first step is to calculate the required sample size in terms of the event rates, as shown above in the sample size calculations, using any power. JUSTIFICATION FOR WHY POWER HAS NO EFFECT ON THE EVENTSPERPERSON. Then, the expected number of events using the same parameters can be calculated by solving the sample size equation for the expected number of events:
+__Power__: Calculations for the power of the study are slightly more involved than the calculations for sample size due to the way the R package being used is built. Although calculations for sample size and power can be performed in terms of both the event rates or the number of expected events, the `gsDesign` package can only calculate power in terms of the number of observed events. Thus, conversions from the event rates to the number of expected events are performed and then the power is calculated. The first step is to calculate the required sample size in terms of the event rates, as shown above in the sample size calculations, using any power.
 
-ALGEBRA FOR EXPECTED NUMBER OF DEATHS USING ALL OF THE GIVEN PARAMETERS AND THE CALCULATED SAMPLE SIZE
+$$N = \Bigg(\frac{Z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\phi(\bar{\lambda)}}{\bar{\lambda}^{2}}(Q_{e}^{-1} + Q_{c}^{-1})} + Z_{0.2}\sqrt{\frac{\phi(\lambda_{e})}{\lambda_{e}}Q_{e}^{-1} + \frac{\phi(\lambda_{c})}{\lambda_{c}^{2}}Q_{c}^{-1}}}{ln(\frac{\lambda_{c}}{\lambda_{e}})}\Bigg)^{2}$$
 
-Now that both the sample size required and the expected number of events have been calculated, the number of events per person can be calculated $\text{Events per Person} = \frac{\text{Number of Events}}{\text{Sample Size}}$ and then multiplied by the specified sample size to get the expected number of events for the population defined. Now, the power can be calculated in terms of the expected number of events. 
+Where all of the same parameter specifications that were outlined above can also be made. The expected number of events can then be calculated using this sample size estimation:
 
-ALGEBRA FOR POWER BASED ON THE EXPECTED NUMBER OF EVENTS FROM SCHOENFELD
+$$E_{N}(D) = \frac{N\bar{\lambda}}{\phi(\bar{\lambda})}$$
+
+Where N is the estimated sample size from above, D represents the event, and $\bar{lambda}$ is defined as found in the sample size calculations above. It should be noted that by using the sample size estimate, the expected number of events is dependent on the parameter $\beta$ and thus, the power. Dividing the expected number of events calculated above, by the sample size estimate from above will result in the number of events per person:
+
+$$\begin{aligned}
+\text{Events per Person} &= \frac{E_{N}(D)}{N} \\
+                         &= \frac{N\bar{\lambda}}{\phi(\bar{\lambda})} \frac{1}{N} \\
+                         &= \frac{\bar{\lambda}}{\phi{\bar{\lambda}}}
+\end{aligned}$$
 
 
-$$\text{Expected Number of Events} = \frac{(z_{1 - \alpha} + z_{\beta})^{2}}{P_{1}P_{2}ln^{2}\delta}$$
+<!-- ADD DESCRIPTION FROM SCHOENFELD HERE -->
+Where both instances of N are the estimated sample size from above. The events per person estimation no longer uses the sample size estimate and is thus free from dependancy on the $\beta$ parameter. This is why any power could be used for the initial sample size estimation. The events per person is still dependent on the study duration, recruitment duration, the event rates, and the censoring rates.
 
-where $\alpha$ is the significance level, $1 - \beta$ is the power, $P_{1}$ is the fraction of sample size one to the total sample size ($\frac{n_{1}}{N}), $P_{2}$ is the fraction of sample size two to the total sample size ($\frac{n_{2}}{N}), and $\delta$ is the treatment effect. The expected number of deaths can also be defined as the total sample size multiplied by the proportion of people that are expected to die. Thus, the total sample size required can be defined as the expected number of events divided by the proportion of subjects who will have an event. Schoenfeld defined the proportion of subjects who will have an event as:
+In _The Asymptotic Properties of Nonparametric Tests for Comparing Survival Distributions (1981)_, Schoenfeld found a test statistics for comparing survival distributions for two different groups that is asymptotically normal with unit variance. He also showed that using the assumpitons of the log rank test, which is commonly used for comparing survival curves, the mean for the test statistic reduces to $ln(\frac{\lambda_{2}}{\lambda{_1}})\sqrt{NQ_{1}Q_{2}d}$, where $\lambda_{i}$ is the event rate for the $i^{th}$ group, N is the sample size, $Q_{i} = \frac{n_{i}}{N}$, and d is the combined probability of an event occurring. This can be further simplified by multiplying N and d to get the expected number of events, E(D). The power can then be calculated in terms of the expected number of events:
 
-$$d = P_{1}d_{1} + P_{2}d_{2}$$
+<!--
+$$\begin{aligned}
+E(D) &= \frac{(z_{1 - \alpha} + z_{\beta})^{2}}{Q_{1}Q_{2}ln^{2}(\frac{\lambda_{2}}{\lambda_{1}})} \\
+E(D)Q_{1}Q_{2}ln^{2}(\frac{\lambda_{2}}{\lambda_{1}}) &= (z_{1 - \frac{\alpha}{2}} + z_{\beta})^{2} \\
+z_{\beta} &= \sqrt{E(D)Q_{1}Q_{2}ln^{2}(\frac{\lambda_{2}}{\lambda_{1}}}) - z_{1 - \frac{\alpha}{2}} \\
+\beta &= \phi(\sqrt{E(D)Q_{1}Q_{2}ln^{2}(\frac{\lambda_{2}}{\lambda_{1}}}) - z_{1 - \frac{\alpha}{2}}) \\
+1 - \beta &= 1 - \phi(\sqrt{E(D)Q_{1}Q_{2}ln^{2}(\frac{\lambda_{2}}{\lambda_{1}}}) - z_{1 - \frac{\alpha}{2}})
+\end{aligned}$$
+-->
 
-where $P_{i} = \frac{n_{i}}{N}$ and $d_{i} =$ proportion within each group that are expected to have an event.
+$$\begin{aligned}
+\text{Power} &= P(Rejecting H_{0} | H_{1}) \\
+             &= P(S \leq ln(\frac{\lambda_{2}}{\lambda_{1}})\sqrt{E(D)Q_{1}Q_{2}} - z_{1 - \frac{\alpha}{2}}) + P(S \geq ln(\frac{\lambda_{2}}{\lambda_{1}})\sqrt{E(D)Q_{1}Q_{2}} + z_{1 - \frac{\alpha}{2}}) \\
+1 - \beta &= \phi(ln(\frac{\lambda_{2}}{\lambda_{1}})\sqrt{E(D)Q_{1}Q_{2}} - z_{1 - \frac{\alpha}{2}}) + 1 - \phi(ln(\frac{\lambda_{2}}{\lambda_{1}})\sqrt{E(D)Q_{1}Q_{2}} + z_{1 - \frac{\alpha}{2}})
+\end{aligned}$$
 
-Then, the number of people required in the study can be determined by dividing the expected number of events by the
+where $1 - \beta$ is the power, $\alpha$ is the significance level, $Q_{i} = \frac{n_{i}}{N}$, $\lambda_{i}$ is the event rate for the $i^{th}$ group, and $\phi$ denotes the Standard Normal distribution function. 
 
 ### 3.5.4 Example
 __Solving for Sample Size:__ A study is being performed to examine the effectiveness of a new drug for preventing breast cancer reccurrence. The goal of the study is to compare the inclusion of this new drug with general lifestyle guidlines to just following the lifestyle guidlines. The study is set to be 10 years long in order to allow for the possiblity of relapse with participants being recruited within the first 2 years of the study. It is expected that recruitment will start out relatively quickly, but then slow gradually. The researches will recruit the same number of participants for each of the two groups. Using general lifestyle guidlines, the researchers expect to see 2 reccurrences per year. However, the researches expect that using their new drug will reduce the number of reccurrences to only 1 per year. The researchers have various methods set up for following the participants over the course of the study, but they believe that both groups have 10% chance of one their reccurrence not being observed or found by the researchers. The researchers decide that they still want to have a significance level of 0.05 and a 80% power. The researchers want to know how many participants will need to be recruited with a one-to-one allocation ration between the two groups.
