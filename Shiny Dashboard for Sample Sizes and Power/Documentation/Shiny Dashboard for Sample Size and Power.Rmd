@@ -16,10 +16,6 @@ output:
 <!--
 ----- Notes -----
 To Do List:
-- Implement Examples edits
-- Make sure equations dont go too far right on page (Just for Word)
-  - TP Power
-  - Print out and manually check
 - Take pictures again at the very end (at work)
 - Have Julian review the statistics
 -->

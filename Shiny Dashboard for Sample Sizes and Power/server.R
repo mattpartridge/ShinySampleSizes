@@ -6,13 +6,9 @@
 
 ###### Notes ######
 #DONE One Mean Margin of Error Significance Level not changing from what the starting value is
-  # Julian didn't see anything obvious. Keep troubleshooting.
-  # Try to use some print statements.
   # --> Issue was with CI tyring to reference alpha input in its own UI.
   #     Same issue in prop but it had been referencing OM instead of OP
   #     Changed CI text so it doesnt reference an input and now it works
-# Should maybe consider changing the starting values to something more reasonable
-  # This would also lead to updating calculation ifelse(is.null()) values.
 
 ############################## Libraries ##############################
 library(shiny); library(shinydashboard); library(pwr); library(gsDesign); library(knitr)
