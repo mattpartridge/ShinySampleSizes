@@ -3,17 +3,18 @@
 # University of Minnesota
 # Advisor: Julian Wolfson
 
-# Target/Sampled Population
-# Reference Population
 
 
 ############################## Libraries ##############################
 library(shiny); library(shinydashboard); library(pwr); library(gsDesign); library(knitr)
 ############################## Libraries ##############################
 
-ui = dashboardPage(
-  dashboardHeader(title = "Sample Size Calculations"),
+ui = dashboardPage(skin = "black",
+  dashboardHeader(
+    title = "Sample Size and Power",
+    titleWidth = 245),
   dashboardSidebar(
+    width = 185,
     sidebarMenu(
       menuItem("One Sample Mean", tabName = "OM"),
       menuItem("One Sample Proportion", tabName = "OP"),
@@ -28,10 +29,10 @@ ui = dashboardPage(
       {
         tabItem(tabName = "OM",
                 fluidRow(
-                  box(width = 12,
-                      selectizeInput(inputId = "solvefor_OM",
-                                     label = p("Solve For: ", em("the desired output")),
-                                     choices = c("Sample Size", "Power", "Precision"),
+                  box(width = 12, color = "black",
+                      selectizeInput(inputId = "calculate_OM",
+                                     label = p("Calculate"),
+                                     choices = c("Sample Size", "Power", "Margin of Error"),
                                      selected = "Sample Size",
                                      multiple = FALSE,
                                      options = NULL,
@@ -45,9 +46,9 @@ ui = dashboardPage(
         tabItem(tabName = "OP",
                 fluidRow(
                   box(width = 12,
-                      selectizeInput(inputId = "solvefor_OP",
-                                     label = p("Solve For: ", em("the desired output")),
-                                     choices = c("Sample Size", "Power", "Precision"),
+                      selectizeInput(inputId = "calculate_OP",
+                                     label = p("Calculate"),
+                                     choices = c("Sample Size", "Power", "Margin of Error"),
                                      selected = "Sample Size",
                                      multiple = FALSE,
                                      options = NULL,
@@ -61,8 +62,8 @@ ui = dashboardPage(
         tabItem(tabName = "TM",
                 fluidRow(
                   box(width = 12,
-                      selectizeInput(inputId = "solvefor_TM",
-                                     label = p("Solve For: ", em("the desired output")),
+                      selectizeInput(inputId = "calculate_TM",
+                                     label = p("Calculate"),
                                      choices = c("Sample Size", "Power"),
                                      selected = "Sample Size",
                                      multiple = FALSE,
@@ -77,8 +78,8 @@ ui = dashboardPage(
         tabItem(tabName = "TP",
                 fluidRow(
                   box(width = 12,
-                      selectizeInput(inputId = "solvefor_TP",
-                                     label = p("Solve For: ", em("the desired output")),
+                      selectizeInput(inputId = "calculate_TP",
+                                     label = p("Calculate"),
                                      choices = c("Sample Size", "Power"),
                                      selected = "Sample Size",
                                      multiple = FALSE,
@@ -93,25 +94,29 @@ ui = dashboardPage(
         tabItem(tabName = "TTE",
                 fluidRow(
                   box(width = 12,
-                      selectizeInput(inputId = "solvefor_TTE",
-                                     label = p("Solve For: ", em("the desired output")),
+                      selectizeInput(inputId = "calculate_TTE",
+                                     label = p("Calculate"),
                                      choices = c("Sample Size", "Power"),
                                      selected = "Sample Size",
                                      multiple = FALSE,
                                      options = NULL,
                                      width = "100%")),
+                  box(width = 12,
+                        HTML(paste("The null (H", tags$sub(0), ") and alternative (H", tags$sub(1), ") hypotheses are:", tags$br(),
+                                   tags$strong("H", tags$sub(0)), ":  (target event rate / reference event rate) &geq; 1", tags$br(),
+                                   tags$strong("H", tags$sub(1)), ":  (target event rate / reference event rate) < 1"))),
                   # Study Information
                   box(width = 4,
                       selectizeInput(inputId = "enrollment_SE_TTE",
-                                     label = p("Enrollment Schedule: ", em("At what point(s) during the study are participants recruited")),
-                                     choices = c("All at Once", "Over a Period", "Continuous Throughout"),
+                                     label = p("Enrollment Schedule: ", em("when do participants enroll")),
+                                     choices = c("All at Once", "Over a Period", "Throughout"),
                                      selected = "All at Once",
                                      multiple = FALSE,
                                      options = NULL,
                                      width = NULL),
                       conditionalPanel("input.enrollment_SE_TTE != 'All at Once'",
                                        selectizeInput(inputId = "enrollmentdist_SE_TTE",
-                                                      label = p("Distribution of Enrollment: ", em("How participants entered the study")),
+                                                      label = p("Distribution of Enrollment: ", em("shape of participants entering over time")),
                                                       # Should go through and change "Exponential Decay" to just "Exponential"
                                                       choices = c("Uniform", "Exponential"),
                                                       selected = "Uniform",
@@ -120,22 +125,22 @@ ui = dashboardPage(
                                                       width = NULL),
                                        conditionalPanel("input.enrollmentdist_SE_TTE == 'Exponential'",
                                                         numericInput(inputId = "gamma_N_TTE",
-                                                                     label = p("Rate: ", em("This must be greater than 0 and can be greater than 1")),
+                                                                     label = p("Exponential Rate: ", em("of growth or decay(<0 for decreasing rate over time, >0 for increasing over time")),
                                                                      value = 0.5,
-                                                                     min = 0,
+                                                                     min = NA,
                                                                      max = NA,
                                                                      step = 0.01,
                                                                      width = NULL),
                                                         sliderInput(inputId = "gamma_S_TTE",
                                                                     label = "",
-                                                                    min = 0,
-                                                                    max = 1,
+                                                                    min = -.5,
+                                                                    max = 1.5,
                                                                     value = 0.5,
                                                                     step = 0.01,
                                                                     round = FALSE,
                                                                     width = NULL))),
                       numericInput(inputId = "studyduration_N_TTE",
-                                   label = p("Study Duration: ", em("Length of study in units of time")),
+                                   label = p("Study Duration: ", em("length of study in units of time")),
                                    value = 5,
                                    min = 0,
                                    max = NA,
@@ -151,7 +156,7 @@ ui = dashboardPage(
                                   width = NULL),
                       conditionalPanel("input.enrollment_SE_TTE == 'Over a Period'",
                                        numericInput(inputId = "enrollmentduration_N_TTE",
-                                                    label = p("Enrollment Duration: ", em("Length of enrollment in units of time")),
+                                                    label = p("Enrollment Duration: ", em("length of enrollment in units of time")),
                                                     value = 2.5,
                                                     min = 0,
                                                     max = NA,
@@ -167,7 +172,7 @@ ui = dashboardPage(
                                                    width = NULL)),
                       numericInput(inputId = "ratio_N_TTE",
                                    # Should confirm this is correct and not one to two
-                                   label = p("Sample Allocation Ratio: ", em("Ratio of the Targeted population to the Reference population")),
+                                   label = p("Sample Allocation Ratio: ", em("of the Targeted sample to the Reference sample")),
                                    value = 1,
                                    min = 0,
                                    max = NA,
