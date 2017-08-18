@@ -27,17 +27,17 @@ server = function(input, output, clientData, session){
                          tags$strong("H", tags$sub(1)), ":  sample mean &ne; reference mean"))))},
       # Left Column
       box(
-        numericInput(inputId = "mu_N_OM", label = p("Mean: ", em("of the sample")), value = 0, min = NA, max = NA, step = 0.01, width = NULL),
+        numericInput(inputId = "mu_N_OM", label = p("Mean: ", em("of the population")), value = 0, min = NA, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "mu_S_OM", label = "", min = -10, max = 10, value = 0, step = 0.01, round = FALSE, width = NULL),
         if(input$calculate_OM %in% c("Sample Size", "Power")){
           list(
-            numericInput(inputId = "nullmu_N_OM", label = p("Reference Mean: ", em("that the sample is being compared to")), value = 1.0, min = NA, max = NA, step = 0.01, width = NULL),
+            numericInput(inputId = "nullmu_N_OM", label = p("Reference Value: ", em("that the mean is being compared to")), value = 1.0, min = NA, max = NA, step = 0.01, width = NULL),
             sliderInput(inputId = "nullmu_S_OM", label = "", min = -10, max = 10, value = 1.0, step = 0.01, round = FALSE, width = NULL))},
-        numericInput(inputId = "sd_N_OM", label = p("Standard Deviation:", em("of the sample mean")), value = 2, min = 0, max = NA, step = 0.01, width = NULL),
+        numericInput(inputId = "sd_N_OM", label = p("Standard Deviation:", em("of the population")), value = 2, min = 0, max = NA, step = 0.01, width = NULL),
         sliderInput(inputId = "sd_S_OM", label = "", min = 0, max = 5, value = 2, step = 0.01, round = FALSE, width = NULL),
         if(input$calculate_OM == "Margin of Error"){
           list(
-            numericInput(inputId = "N_N_OM", label = p("Sample Size: ", em("of the sample mean")), value = 33, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OM", label = p("Sample Size:"), value = 33, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 100, value = 33, step = 1, round = FALSE, width = NULL))}),
       # Right Column
       box(
@@ -52,7 +52,7 @@ server = function(input, output, clientData, session){
                 sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 100, value = 33, step = 1, round = FALSE, width = NULL)))},
         if(input$calculate_OM == "Power"){
           list(
-            numericInput(inputId = "N_N_OM", label = p("Sample Size: ", em("of the sample mean")), value = 33, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OM", label = p("Sample Size:"), value = 33, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OM", label = "", min = 0, max = 100, value = 33, step = 1, round = FALSE, width = NULL),
             box(status = "success", solidHeader = TRUE, width = 12,
               numericInput(inputId = "power_N_OM", label = p("Power: ", em("given the current values")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
@@ -208,11 +208,11 @@ server = function(input, output, clientData, session){
         sliderInput(inputId = "p_S_OP", label = "", min = 0, max = 1, value = 0.5, step = 0.01, round = FALSE, width = NULL),
         if(input$calculate_OP %in% c("Sample Size", "Power")){
           list(
-            numericInput(inputId = "nullp_N_OP", label = p("Reference Proportion :", em("that the sample proportion is being compared to")), value = 0.7, min = 0, max = 1, step = 0.01, width = NULL),
+            numericInput(inputId = "nullp_N_OP", label = p("Reference Proportion :", em("that the population proportion is being compared to")), value = 0.7, min = 0, max = 1, step = 0.01, width = NULL),
             sliderInput(inputId = "nullp_S_OP", label = "", min = 0, max = 1, value = 0.7, step = 0.01, round = FALSE, width = NULL))},
         if(input$calculate_OP == "Margin of Error"){
           list(
-            numericInput(inputId = "N_N_OP", label = p("Sample Size: ", em("of the sample proportion")), value = 46, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OP", label = p("Sample Size:"), value = 46, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 100, value = 46, step = 1, round = FALSE, width = NULL))}),
       # Output
       box(
@@ -227,7 +227,7 @@ server = function(input, output, clientData, session){
                 sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 100, value = 46, step = 1, round = FALSE, width = NULL)))},
         if(input$calculate_OP == "Power"){
           list(
-            numericInput(inputId = "N_N_OP", label = p("Sample Size: ", em("of the sample proportion")), value = 46, min = 0, max = NA, step = 1, width = NULL),
+            numericInput(inputId = "N_N_OP", label = p("Sample Size:"), value = 46, min = 0, max = NA, step = 1, width = NULL),
             sliderInput(inputId = "N_S_OP", label = "", min = 0, max = 100, value = 46, step = 1, round = FALSE, width = NULL),
             box(status = "success", solidHeader = TRUE, width = 12,
                 numericInput(inputId = "power_N_OP", label = p("Power: ", em("given the current values")), value = 0.8, min = 0, max = 1, step = 0.05, width = NULL),
