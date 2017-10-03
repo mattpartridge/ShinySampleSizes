@@ -10,9 +10,6 @@ fl$death = as.factor(fl$death)
 fl$sex = as.factor(fl$sex)
 ## MGUS = 1
 mgus = fl[fl$mgus == 1, ]
-## Male
-length(fl$sex[fl$sex == "M"])
-
 
 # TTE: SAMPLE SIZE AND POWER Get kaplan meyer estimate of hazard rate of death at 1 year. Hazard rates for MGUS = 1 x sex or some quartile of KL Rate (above/below median)
 
@@ -21,9 +18,7 @@ length(fl$sex[fl$sex == "M"])
 summary(mgus$kl) # 2.35
 sd(mgus$kl) # 4.37
 ## One Proportion
-# length(mgus$death[mgus$death == 1])/length(mgus$death) # 0.14
-# length(fl$mgus[fl$mgus == 1])/length(fl$mgus) # 0.015
-length(fl$sex [fl$sex == "F"])/length(fl$sex) # 0.55
+length(mgus$death[mgus$death == 1])/length(mgus$death) # 0.14
 ## Two Means
 by(mgus$kl, mgus$sex, summary) # F = 2.01, M = 2.83
 ## Two Proportions
@@ -39,19 +34,3 @@ by(fl$death, fl$mgus, summary)
 
 length(fl$mgus[fl$mgus==1])/length(fl$mgus[fl$mgus==0])
 nSurvival(ratio = l/67)
-
-# Time to Event Example
-median(fl$kl[fl$sex == "M"]) # 0.86
-ceiling(max(fl$futime[fl$sex == "M"])/365.25) # Study Duration = 15
-summary(fl[fl$sex == "M", "kl.med"]); 1841/1683 # Allocation Ratio = 1.09
-km.kl.M = survfit(Surv(futime, death) ~ kl.med, data = fl[fl$sex == "M", ])
-summary(km.kl.M) # > Median = 0.04, < Median = 0.03
-nrow(fl[fl$sex == "M", ]) # Sample Size = 3524,
-
-median(fl$kl[fl$sex == "F"]) # 0.83
-ceiling(max(fl$futime[fl$sex == "F"])/365.25) # Study Duration = 15
-summary(fl[fl$sex == "F", "kl.med"]); 2096/2254 # Allocation Ratio = 0.93
-km.kl.F = survfit(Surv(futime, death) ~ kl.med, data = fl[fl$sex == "F", ])
-summary(km.kl.F) # > Median = 0.03, < Median = 0.02
-nrow(fl[fl$sex == "F", ]) # Sample Size = 4350,
-
