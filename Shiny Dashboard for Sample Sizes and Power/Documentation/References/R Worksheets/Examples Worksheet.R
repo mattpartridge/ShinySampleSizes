@@ -10,9 +10,12 @@ fl$death = as.factor(fl$death)
 fl$sex = as.factor(fl$sex)
 ## MGUS = 1
 mgus = fl[fl$mgus == 1, ]
+<<<<<<< HEAD
 ## Male
 length(fl$sex[fl$sex == "M"])
 
+=======
+>>>>>>> origin/master
 
 # TTE: SAMPLE SIZE AND POWER Get kaplan meyer estimate of hazard rate of death at 1 year. Hazard rates for MGUS = 1 x sex or some quartile of KL Rate (above/below median)
 
@@ -21,9 +24,13 @@ length(fl$sex[fl$sex == "M"])
 summary(mgus$kl) # 2.35
 sd(mgus$kl) # 4.37
 ## One Proportion
+<<<<<<< HEAD
 # length(mgus$death[mgus$death == 1])/length(mgus$death) # 0.14
 # length(fl$mgus[fl$mgus == 1])/length(fl$mgus) # 0.015
 length(fl$sex [fl$sex == "F"])/length(fl$sex) # 0.55
+=======
+length(mgus$death[mgus$death == 1])/length(mgus$death) # 0.14
+>>>>>>> origin/master
 ## Two Means
 by(mgus$kl, mgus$sex, summary) # F = 2.01, M = 2.83
 ## Two Proportions
@@ -39,6 +46,7 @@ by(fl$death, fl$mgus, summary)
 
 length(fl$mgus[fl$mgus==1])/length(fl$mgus[fl$mgus==0])
 nSurvival(ratio = l/67)
+<<<<<<< HEAD
 
 # Time to Event Example
 median(fl$kl[fl$sex == "M"]) # 0.86
@@ -55,3 +63,5 @@ km.kl.F = survfit(Surv(futime, death) ~ kl.med, data = fl[fl$sex == "F", ])
 summary(km.kl.F) # > Median = 0.03, < Median = 0.02
 nrow(fl[fl$sex == "F", ]) # Sample Size = 4350,
 
+=======
+>>>>>>> origin/master
