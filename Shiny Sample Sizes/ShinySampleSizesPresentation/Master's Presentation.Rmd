@@ -1,0 +1,260 @@
+---
+title: "Shiny Dashboard for Sample Size and Power Calculations"
+author: "Matt Partridge"
+date: "November 3, 2017"
+output:
+  ioslides_presentation: default
+---
+
+## Outline {.smaller}
+- Introduction
+    - The Dashboard
+    - Purpose
+    - How to Launch
+- Methods
+    - Features of this Dashboard
+    - Using the Dashboard
+    - Statistical Formulas
+    - R Functions
+- Discussion
+    - Limitations
+    - Future Improvements
+    - Questions
+
+## The Dashboard
+- Shiny Dashboard developped with R in RStudio
+- Calculates sample size and power (and margin of error) for various study scenarios
+- Uses robust statistical calculations
+- Interactivity for exploration of variable relationships
+- Real-time results
+
+## Purpose
+- To provide a modern, free, and interactive calculator
+- Sample size and power calculations are a vital aspect of scientific studies
+- Most calculators require submitting results
+- The Piface application (Russel Lenth) is no longer supported\
+
+## How to Launch {.smaller}
+- Dashboard
+    - <https://mfpartridge.shinyapps.io/shinysamplesizesdashboard/>
+- Documentation
+    - <https://mfpartridge.shinyapps.io/shinysamplesizesdocumentation/>
+- This Presentation
+    - <https://mfpartridge.shinyapps.io/shinysamplesizespresentation/>
+- GitHub
+    - <https://github.com/mattpartridge/ShinySampleSizes>
+    - Download the ui.R and server.R files and run in RStudio
+
+## Features of this Dashboard
+- Interactive text boxes and sliders
+    - The user can explore variable relationships in real time
+- Dynamic user interface
+    - The page updates the possible inputs based on the scenario and calculation
+- Conditional inputs
+    - Certain inputs only disply in when certain conditions have been met (Time to Event)
+- Reactive values
+    - Unconnected slider and textbox inputs appear connected
+
+## Using the Dashboard
+- Time to go through a few examples
+
+<https://mfpartridge.shinyapps.io/shinysamplesizesdashboard/>
+
+<!--
+Lets get started
+  - Introduction page gives a quick outline of how to set everything up and also links to the documentation
+  - Select a scenario from the sidebar
+- One Mean (Mainly on Sample Size, show Power, and show Margin of Error are available calculation selection)
+  General
+  - Calculation selector at the top of the page
+  - Inputs can be entered or adjusted
+    - This demonstrates the interactive inputs
+    - This could also demonstrate the reactive values
+  - Make a comment that the output is outlined in green
+  - Power is defined as the probability that the statistic is more extreme than the distributional critical value
+    - This can be calculated using distributional quantile functions
+  - In this case, N is calculated using a search to equate the power to a specified power
+    - This is done by using uniroot
+  Specific
+  - Point out hypotheses at top of page
+  - Demonstrate variable relationships
+    - As delta increases, less samples are required and more power is obtained
+    - As sig level approaches 0 (smaller), more samples are required and less power is obtained
+    - As N increase, power increases
+    - Mention bigger SD means less power and more samples required
+  - t-distribution with n-1 degrees of freedom
+  - pwr.t.test uses pt and uniroot to calculate power and sample respectively
+  - Mention that margin of error can be calculated
+- One Prop (Switch right away from Sample Size to Power, dont show Margin of Error)
+  General
+  - Changing between tabs changes the layout (dynamic UI)
+  Specific
+  - Point out hypotheses at top of page
+  - Maybe mention the non-linear transform
+    - Arcsin transform makes it so equal differences in phi have equal detectability
+  - z distribution (standard normal)
+  - pwr.p.test uses pnorm and uniroot to calculate power and sample respectively
+  - Mention that margin of error can be calculated
+- Two Means (Stay on Sample Size, show that power is available)
+  General
+  - Two groups requires the specification of one of the samples to calculate the other
+  Specific
+  - Point out hypotheses at top of page (Different than one mean)
+  - Mention SD is assumed equal
+  - t-distribution with n1+n2-2 degrees of freedom
+  - pwr.t2n.test uses pt and uniroot similar to one mean with a slightly different t statistic
+- Two Proportions
+  Specific
+  - Point out hypotheses at top of page (Different that one prop)
+  - z distribution (standard normal)
+  - pwr.2p2n.test uses pnorm and uniroot similar to one prop with a slightly different z statistics
+- Time to Event
+  General
+  - Conditional inputs display when necessary
+  Specific
+  - Mention the hypotheses and that it is a risk ratio instead of a risk difference (one sided)
+  - Talk about how each of the new inputs affects the sample size and power
+    - Longer duration requires less samples and gives more power
+    - Longer enrollment requires more samples and gives less power
+      - Convex give more power
+      - Concave gives less power
+    - Allocation further from 1:1 requires more samples and gives less power
+    - Smaller delta (risk ratio) requires more sampls and gives less power
+    - Censoring deflates event rates which affects the delta (risk ratio)
+    - alpha, power, and samples are similar to other studies
+  - Calculations are based on exponential survival curves with various tweaks depending on the inputs
+  - Mention the difference between the expected number of events and the hazard rates
+  - Talk about how power and sample sizes are calculated
+    - Power is just an equation using pnorm based on the event rates and logrank statistic (nSurvival)
+    - Sample size
+      - Calculate a needed sample size given all other parameters and any power (This also give nEvents)
+      - Divide nEvents by sample size to get events per person (independent of original power now)
+      - Multiply events per person by input sample size (expected events)
+      - Use other parameters to calculate power (nEvents) in terms of expected events
+-->
+
+
+<!-- Outline for in dashboard work OLD
+What does that app do
+  - Walk through and show how to set everything up and that it calculates (OM)
+    - Select the scenario
+    - Select the calculation
+    - Enter the inputs into the sliders, text boxes, or drop downs
+    - Show that the output calculates in green
+What are the features (Specific aspects, not just the general app)
+  - Various scenarios
+  - Interactive Sliders
+  - Conditional inputs (TTE)
+  - Corresponding inputs updating based on the other input
+  - Output outlined in green
+Examples
+- Two Means
+  - Background Information
+    - FLCs 
+    - Kappa/Lambda
+    - MGUS
+    - The original study and secondary assay
+  - Premise
+    - Mean(Kappa/Lambda) for MGUS = Mean(Kappa/Lambda) for no MGUS
+  - Inputs
+    - Previous study as pilot gets you Mean One, Mean Two, and SD
+      - Mean One: 2.01
+      - Sample Size One: 500
+      - Mean Two: 2.83
+      - Standard Deviation: 4.37
+      - Significance Level: 0.05
+      - Power: 0.8
+  - Calculations
+    - Adjust N1 to determine when you could get equal Ns
+    - Show how a smaller delta increases sample size and decreases power
+    - Show how making more significant requires more samples and reduces power
+    - Show more samples means more power
+    - Show larger sd requires more samples and reduces power
+  - Statistics Under the Hood
+    - Two sample t-Test
+      - t distribution with n-2 degrees of freedom
+    - Using `t.t2n.test` function
+    - In the `pwr` package
+- Time to Event
+  - Background Information  
+    - Same as Two Means but looking at death hazard curves
+  - Premise
+    - Death hazard rate for males in upper half of K/L rates = Death hazard rate for males in lower half of K/L rates
+    - HR in upper/HR in lower = 1 (Risk Ratio)
+    - Info from the study can be used to calculate power of the study
+  - Inputs
+    - Enrollment Schedule: Throughout
+    - Distribution of Enrollment: Uniform
+    - Study Duration: 15 (years)
+    - Sample Allocation Ratio: 1.09
+    - Target Event Rate: 0.04 (death rate per year)
+    - Reference Event Rate: 0.03 (death rate per year)
+    - Target Censoring Rate: 0
+    - Reference Censoring Rate: 0
+    - Significance Level: 0.05
+    - Total Sample Size: 3524
+  - Calculations
+    - Show relationship effect of study duration. Longer = more power and less N
+    - Show relationship of recruitment. Maybe go in depth for this part
+    - Show effect of censoring
+    - Show relationship of delta size. Smaller means less power and more n
+    - Show effect of allocation ratio. Essentially changes effect of hazard rate (almost like weighting)
+  - Statistics
+    - Exponential surviavl curves
+    - Assumes proportional hazards
+    - Thus, comparison of hazards (risk ratio = 1)
+    - nSurvival and nEvents from gsDesign
+
+
+## Examples
+- Background info
+- Enterinputs with explanation
+- Examine output
+- Show variable interdependencies by changing various inputs and examining outputs
+    - A couple of examples from OM, OP, TM, TP,
+    - At least one example from TTE
+-->
+
+## Statistics
+- $t$ Distribution
+    - Comparing means
+    - One and Two Sample Mean(s)
+- Normal Distribution
+    - One and Two Sample Proportion(s)
+        - Non-linear transformation
+    - Time to Event
+        - Logrank statistic is asymptotically normal with unit variance
+
+## R Functions 
+- One Sample Mean: `pwr.t.test`
+- One Sample Proportion: `pwr.p.test`
+- Two Sample Means: `pwr.t2n.test`
+- Two Sample Proportions: `pwr.2p2n.test`
+- Time to Event
+    - Sample Size: `nSurvival`
+    - Power: `nSurvival` and `nEvents`
+
+## Limitations
+- Layout
+    - Inputs should be grouped by relevant categories
+    - Need to see output while adjusting any input
+    - Especially relevant for the Time to Event scenario
+- Calculation Selector
+    - Selector at the top of the page is clunky
+    - Complete interconnectedness would be ideal
+        - Calculate sample size until the sample size input is manipulated
+        - Then calculate power until the power input is manipulated
+    - Current attempts resulted in infinite loops
+
+## Future Improvements
+- Fixing the infinitely updating loop
+- Appropriate dynamic slider bounds
+- Additional options for functions (e.g. alternative hypothesis)
+- Code consolidation and streamlining
+- Additional educational dialogue
+    - Explanation of each scenario
+    - Interpretation of output
+    - Power and sample size curves
+- Adding documentation within the dashboard
+
+## Questions

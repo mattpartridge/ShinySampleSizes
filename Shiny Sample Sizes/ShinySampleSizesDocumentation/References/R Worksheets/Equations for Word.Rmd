@@ -1,0 +1,47 @@
+---
+title: "Equations for Word"
+author: "Matt Partridge"
+date: "October 22, 2017"
+output: word_document
+---
+
+<!-- Two Means for Word -->
+$$\begin{aligned}
+Power &= P\left(\text{Rejecting } H_{0} | H_{1}\right) \\
+&= P\left(t \leq -t_{1-\alpha/2, n_{1}+n_{2}-2}\right) + P\left(t \geq t_{1-\alpha/2, n_{1}+n_{2}-2}\right) \\
+&= P\left(\frac{\bar{x}_{1}-\bar{x}_{2}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}} \leq -t_{1-\alpha/2, n_{1}+n_{2}-2}\right) + P\left(\frac{\bar{x}_{1}-\bar{x}_{2}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}} \geq t_{1-\alpha/2, n_{1}+n_{2}-2}\right) \\
+&= P\left(\bar{x}_{1}-\bar{x}_{2} \leq -t_{1 - \alpha / 2, n_{1}+n_{2}-2}\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}\right) + P\left(\bar{x}_{1}-\bar{x}_{2} \geq t_{1 - \alpha / 2, n_{1}+n_{2}-2}\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}\right) \\
+&= P\left(\bar{x}_{1} \leq \bar{x}_{2}-t_{1 - \alpha / 2, n_{1}+n_{2}-2}\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}\right) + P\left(\bar{x}_{1} \geq \bar{x}_{2}+t_{1 - \alpha / 2, n_{1}+n_{2}-2}\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}\right) \\
+&= P\left(\frac{\bar{x}_{1}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}} \leq \frac{\bar{x}_{2}-t_{1 - \alpha / 2, n_{1}+n_{2}-2}\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}}\right) \\ 
+&\qquad + P\left(\frac{\bar{x}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}} \geq \frac{\bar{x}_{2}+t_{1 - \alpha / 2, n_{1}+n_{2}-2}\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}}\right)
+\end{aligned}
+$$
+$$
+\begin{aligned}
+&= P\left(\frac{\bar{x}_{1}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}} \leq \frac{\bar{x}_{2}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}}-t_{1 - \alpha / 2, n_{1}+n_{2}-2}\right) \\
+&\qquad + P\left(\frac{\bar{x}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}} \geq \frac{\bar{x}_{2}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}}+t_{1 - \alpha / 2, n_{1}+n_{2}-2}\right) \\
+&= f_{t}\left( \frac{\bar{x}_{2}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}}-t_{1 - \alpha / 2, n_{1}+n_{2}-2}\right) + 1-f_{t}\left(\frac{\bar{x}_{2}-\mu_{1}}{\sqrt{\frac{s^{2}}{n_{1}} + \frac{s^{2}}{n_{2}}}}+t_{1 - \alpha / 2, n_{1}+n_{2}-2}\right)
+\end{aligned}
+$$
+
+<!-- Two Proportions for Word -->
+$$
+\begin{aligned}
+Power &= P\left(\text{Rejecting } H_{0} | H_{1}\right) \\
+&= P\left(z \leq -z_{1 - \frac{\alpha}{2}}\right) + P\left(z \geq z_{1 - \frac{\alpha}{2}}\right) \\
+&= P\left(\frac{\hat{p}_{1} - \hat{p}_{2}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} \leq -z_{1 - \frac{\alpha}{2}}\right) + P\left(\frac{\hat{p}_{1} - \hat{p}_{2}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} \geq z_{1 - \frac{\alpha}{2}}\right) \\
+&= P\left(\hat{p}_{1} - \hat{p}_{2} \leq -z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}\right) \\
+&\qquad + P\left(\hat{p}_{1} - \hat{p}_{2} \geq z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}\right) \\
+&= P\left(\hat{p}_{1} \leq \hat{p}_{2} - z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}\right) \\
+&\qquad + P\left(\hat{p}_{1} \geq \hat{p}_{2} + z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}\right) \\
+&= P\left(\frac{\hat{p}_{1} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} \leq \frac{\hat{p}_{2} - z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}}\right) \\
+&\qquad + P\left(\frac{\hat{p}_{1} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} \geq \frac{\hat{p}_{2} + z_{1 - \frac{\alpha}{2}}\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}}\right)
+\end{aligned}
+$$
+$$
+\begin{aligned}
+&= P\left(\frac{\hat{p}_{1} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} \leq \frac{\hat{p}_{2} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} - z_{1 - \frac{\alpha}{2}}\right) \\
+&\qquad + P\left(\frac{\hat{p}_{1} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} \geq \frac{\hat{p}_{2} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} + z_{1 - \frac{\alpha}{2}}\right) \\
+&= \phi\left(\frac{\hat{p}_{2} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} - z_{1 - \frac{\alpha}{2}}\right) + 1 - \phi\left(\frac{\hat{p}_{2} - p_{1}}{\sqrt{\frac{\hat{p}_{1}(1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2}(1 - \hat{p}_{2})}{n_{2}}}} + z_{1 - \frac{\alpha}{2}}\right)
+\end{aligned}
+$$
